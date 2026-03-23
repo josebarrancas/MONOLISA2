@@ -473,9 +473,21 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.8f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.8f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.8f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
+"Assets/Scripts/BackGrounds_Scripts/ParallaxEfect_BackGround.cs"
+"Assets/Scripts/Biblioteca_Scripts/LogicaPoderes.cs"
 "Assets/Scripts/Blocks_Scripts/Bloque_Flotante.cs"
 "Assets/Scripts/Blocks_Scripts/Bloque_Fragil.cs"
+"Assets/Scripts/HUD_Scripts/PowerSelector.cs"
+"Assets/Scripts/Levels_Scripts/LevelData.cs"
+"Assets/Scripts/Levels_Scripts/SorteoNiveles.cs"
+"Assets/Scripts/Menu_Scripts/ControlarPausaMenu.cs"
+"Assets/Scripts/Player_Scripts/Controlador_Poderes.cs"
 "Assets/Scripts/Player_Scripts/Movimiento.cs"
+"Assets/Scripts/Powers_Scripts/Base/Logic_Manager.cs"
+"Assets/Scripts/Powers_Scripts/Base/PoderData.cs"
+"Assets/Scripts/Powers_Scripts/Base/PowerManager.cs"
+"Assets/Scripts/Powers_Scripts/Logic/EmbestifresaPower.cs"
+"Assets/Scripts/Powers_Scripts/Logic/ImpulsoEscenario.cs"
 -langversion:9.0
 /deterministic
 /optimize+
