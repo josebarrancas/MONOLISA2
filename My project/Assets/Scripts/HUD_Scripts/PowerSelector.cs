@@ -8,7 +8,7 @@ public class PowerSelector : MonoBehaviour
     [Header("Base de Datos de Poderes")]
     public List<PoderData> todosLosPoderes = new List<PoderData>();
     private List<PoderData> mis9Poderes = new List<PoderData>();
-    private int indiceActual = 0;
+    private int indiceActual ;
 
     [Header("Referencias UI")]
     public RectTransform circuloAzul;
@@ -22,10 +22,10 @@ public class PowerSelector : MonoBehaviour
     public TextMeshProUGUI txtCargas; // <-- Asegúrate de crear este texto en tu HUD
 
     [Header("Configuración Círculo")]
-    public Vector3 escalaExpandida = new Vector3(2.5f, 2.5f, 1f);
+    public Vector3 escalaExpandida = new Vector3();
 
     [Header("Configuración Icono")]
-    public Vector3 escalaIconoExpandido = new Vector3(1.5f, 1.5f, 1f);
+    public Vector3 escalaIconoExpandido = new Vector3();
     public float desplazamientoDerecha;
 
     [Header("Animación")]
@@ -36,7 +36,7 @@ public class PowerSelector : MonoBehaviour
 
     void Start()
     {
-        if (iconoPoderActual != null)
+        if (iconoPoderActual != null && todosLosPoderes != null && todosLosPoderes.Count > 0)
             posicionOriginalIcono = iconoPoderActual.anchoredPosition;
 
         PrepararPartida();
@@ -44,22 +44,38 @@ public class PowerSelector : MonoBehaviour
 
     void PrepararPartida()
     {
-        if (todosLosPoderes.Count > 1) return;
-
-        List<PoderData> copia = new List<PoderData>(todosLosPoderes);
-        for (int i = 0; i < 9; i++)
+        if (todosLosPoderes == null || todosLosPoderes.Count == 0)
         {
-            int rnd = Random.Range(0, copia.Count);
-            // IMPORTANTE: Instanciamos para no modificar el archivo original del poder
-            mis9Poderes.Add(Instantiate(copia[rnd]));
-            copia.RemoveAt(rnd);
+            Debug.LogError("¡No hay poderes en la lista 'Todos Los Poderes'!");
+            return;
         }
 
-        ActualizarVisualPoder(mis9Poderes[indiceActual]);
+        mis9Poderes.Clear();
+        Debug.Log("Se detecto al menos un poder");
+
+
+        for (int i = 0; i < todosLosPoderes.Count; i++)
+        {
+            mis9Poderes.Add(Instantiate(todosLosPoderes[i]));
+        }
+
+
+        while (mis9Poderes.Count < 1 && mis9Poderes.Count < 9)
+        {
+            mis9Poderes.Add(Instantiate(todosLosPoderes[0]));
+        }
+
+
+        if (mis9Poderes.Count > 0)
+        {
+            ActualizarVisualPoder(mis9Poderes[0]);
+        }
     }
 
-    void Update()
+        void Update()
     {
+        if (this == null || circuloAzul == null) return;
+
         expandido = Input.GetKey(KeyCode.C);
 
         if (expandido)
@@ -87,8 +103,14 @@ public class PowerSelector : MonoBehaviour
 
     void CambiarPoder(int direccion)
     {
+        //========================================
+        //          Borrar los debugs
+        //========================================
+        Debug.Log("La direccion es: " + direccion);
         indiceActual = (indiceActual + direccion + mis9Poderes.Count) % mis9Poderes.Count;
         ActualizarVisualPoder(mis9Poderes[indiceActual]);
+        Debug.Log("El poder actual es: " + mis9Poderes[indiceActual].nombre);
+        Debug.Log("El indice actual es: " + indiceActual);
     }
 
     public void ActualizarVisualPoder(PoderData datos)
