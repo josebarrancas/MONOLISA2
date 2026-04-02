@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Embestifresa
   explicacion: Impulsara todos los bloques que apuntes
-  icono: {fileID: -416060295633103605, guid: 262236bb05f23cf42bc9bb64334b08de, type: 3}
+  icono: {fileID: 3648969267583192859, guid: 8c0178d26f0d4844e83067f99e473a03, type: 3}
   etiquetas:
   - Salto
   - Volar

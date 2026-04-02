@@ -4,15 +4,20 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Controla el movimiento básico del jugador, el salto y la activación
+/// Controla el movimiento basico del jugador, los estados de las animaciones, el salto y la activación
 /// de los poderes especiales mediante la tecla X.
 /// </summary>
 public class Movimiento : MonoBehaviour
 {
     /* Son variables publicas que permiten ajustar la velocidad y
     la fuerza del salto directamente desde el inspector de unity */
+    [Header ("Configuracion del Player")]
     public float Speed;
     public float JumpForce;
+    public LayerMask capaSuelo;
+
+    [Header("Configuracion de Raycast")]
+    public float largoRayo = 2.5f;
 
     private Animator Animator;
     private Rigidbody2D rb; // Es la referencia al motor de física de unity
@@ -30,27 +35,41 @@ public class Movimiento : MonoBehaviour
 
     void Update()
     {
-        // SEGURIDAD: Si el juego está pausado (Time.timeScale = 0), no procesamos entradas
+        // SEGURIDAD: Si el juego esta pausado (Time.timeScale = 0), no procesamos entradas
         if (Time.timeScale == 0) return;
 
-        /* Captura la entrada del teclado de forma instantánea */
+        /* Captura la entrada del teclado de forma instantanea */
         Horizontal = Input.GetAxisRaw("Horizontal");
 
-        // Giro del sprite según la dirección
+        // Giro del sprite segun la direccion
         if (Horizontal < 0.0f) transform.localScale = new Vector3(-0.8f, 0.8f, 1.0f);
         else if (Horizontal > 0.0f) transform.localScale = new Vector3(0.8f, 0.8f, 1.0f);
 
+        // Si el 'Player' se queda quieto cambia a la animacion de 'Idle'
         Animator.SetBool("running", Horizontal != 0.0f);
 
-        /* Herramienta visual para comprobar el suelo en la ventana de Escena */
-        Debug.DrawRay(transform.position, Vector3.down * 2.3f, Color.red);
+        
 
-        /* Raycast para detectar si el jugador toca el suelo */
-        if (Physics2D.Raycast(transform.position, Vector3.down, 2.3f))
-        {
-            Grounded = true;
-        }
-        else Grounded = false;
+        // Declaramos un 'Vector2' para cada 'Raycast' que usaremos
+        Vector2 Centro = transform.position;
+        Vector2 diagonalIzquierda = new Vector2(-0.3f, -1f).normalized; // Aqui para poder hacer que los rayos sean en diagonal tenemos que colocar las coordenas
+        Vector2 diagonalDerecha = new Vector2(0.3f, -1f).normalized; // de en donde terminara el 'Raycast' y tenemos que 'normalized' para que se dibuje una diagonal
+
+
+        // Declaramos una variable de tipo booleano para cada 'Raycast'
+        // seran verdaderas si algun 'Raycast' toca alguna plataforma con la etiqueta de tipo 'Suelo'
+        bool tocarCentro = Physics2D.Raycast(Centro, Vector2.down, largoRayo, capaSuelo);
+        bool tocarIzquierda = Physics2D.Raycast(Centro, diagonalIzquierda, largoRayo, capaSuelo);//Hay que realizar esta suma para que el raycast pueda salir del colliler del player
+        bool tocarDerecha = Physics2D.Raycast(Centro, diagonalDerecha, largoRayo, capaSuelo);
+
+        // Sera verdadera si algun 'Raycast' toca alguna plataforma
+        Grounded = tocarCentro || tocarIzquierda || tocarDerecha;
+
+        // Herramienta para poder visualizar los 'Raycast' en escena
+        Debug.DrawRay(Centro, Vector2.down * largoRayo, Color.red);
+        Debug.DrawRay(Centro, diagonalIzquierda * (largoRayo), Color.red);
+        Debug.DrawRay(Centro, diagonalDerecha * (largoRayo), Color.red);
+
 
         // --- LÓGICA DE PODER (TECLA X) ---
         if (Input.GetKeyDown(KeyCode.X))
@@ -77,19 +96,31 @@ public class Movimiento : MonoBehaviour
         if (nombrePoder == "Embestifresa")
         {
            
-            EmbestifresaPower scriptImpulso = GetComponent<EmbestifresaPower>();
+            EmbestifresaPower scriptFresa = GetComponent<EmbestifresaPower>();
 
-            Debug.Log("¿Se encontró el componente?: " + (scriptImpulso != null));
+            Debug.Log("¿Se encontró el componente?: " + (scriptFresa != null));
 
-            if (scriptImpulso != null)
+            if (scriptFresa != null)
             {
-                Vector2 direccion = new Vector2(transform.localScale.x, 0).normalized;
-                scriptImpulso.EjecutarImpulso(direccion.normalized);
+                float inputX = Input.GetAxisRaw("Horizontal");
+                float inputY = Input.GetAxisRaw("Vertical");
+
+                if (inputX == 0 && inputY == 0) { inputX = transform.localScale.x > 0 ? 1 : -1; }
+
+                Vector2 direccionDash = new Vector2(inputX, inputY).normalized;
+
+                Debug.Log("Direccion en Y es: " + inputY);
+
+                scriptFresa.EjecutarImpulso(direccionDash);
                 selector.RegistrarUsoDePoder();
+
+               /* Vector2 direccion = new Vector2(transform.localScale.x, 0).normalized;
+                scriptImpulso.EjecutarImpulso(direccion.normalized);
+                selector.RegistrarUsoDePoder();*/
             }
             else
             {
-                Debug.LogError("¡ERROR!: El script ImpulsoPower no está pegado al Player");
+                Debug.LogError("ERROR: Fallo al encontrar el script del poder 'EmbestiFresa'", this);
             }
         }
     }
