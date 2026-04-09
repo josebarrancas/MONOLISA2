@@ -9,12 +9,12 @@ public class Bloque_Flotante : MonoBehaviour
 
     // Declaramos la variable para pode contorlar las fisicas del bloque
     private Rigidbody2D rb;
+ 
 
 
     // Declaramos una variable para poder controlar el umbral de velocidad minima para
     // forzar la detencion del bloque y no vuele 'infinitamente'. 
     [Header("Configuracion de bloque")]
-    public float umbralFreno = 0.1f;
     public float fuerzaImpacto = 1f;
 
     void Start()
@@ -23,6 +23,8 @@ public class Bloque_Flotante : MonoBehaviour
         //rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.mass = 4f;
+        rb.linearDamping = 0.05f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

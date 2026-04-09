@@ -4,6 +4,7 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     public string nombreEscena;
+    public string ID;
     public string[] etiquetasNivel;
-   public string ID;
+   
 }
