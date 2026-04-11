@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdae1f2cdcff51541abcb5af41d3ed5f, type: 3}
+  m_Name: Poder_Singularidad
+  m_EditorClassIdentifier: Assembly-CSharp::PoderData
+  nombre: Singularidad
+  explicacion: 
+  icono: {fileID: 3589427961894684663, guid: 8ed7a83c8de58804690bfbdcc32a3f2e, type: 3}
+  etiquetas:
+  - General
+  tipo: 1
+  cantidadUsos: 3
+  cargaMedidor: 0
