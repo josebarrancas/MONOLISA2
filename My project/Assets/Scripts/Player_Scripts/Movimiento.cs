@@ -70,10 +70,13 @@ public class Movimiento : MonoBehaviour
             BrujulaGravitacionalPower brujula = GetComponent<BrujulaGravitacionalPower>();
             if (brujula != null && brujula.estaUsandoBrujula) return;
 
-            // --- SEGURO DE MUERTE ---
+
+            // Registramos la muerte del jugador antes de que se reinicie la escena
+            if (SkillManager.Instance != null) SkillManager.Instance.intentosNivel++;
+           
+           
             // Si el jugador cae al vacío, enderezamos el mundo antes de recargar la escena.
             Physics2D.gravity = new Vector2(0, -9.81f);
-
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Brujula Gravitacional
   explicacion: 
-  icono: {fileID: 0}
+  icono: {fileID: 6557589439278097309, guid: 560749646ce8ee044b8df9bb9729a29b, type: 3}
   etiquetas:
   - New_gravedad
   - general

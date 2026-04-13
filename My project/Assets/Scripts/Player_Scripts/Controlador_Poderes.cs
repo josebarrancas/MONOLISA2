@@ -8,7 +8,6 @@ public class Controlador_Poderes : MonoBehaviour
     void Start()
     {
         selectorUI = FindObjectOfType<PowerSelector>();
-
         if (selectorUI == null)
         {
             Debug.LogError("¡ALERTA INICIAL!: No se encontró el HUD (PowerSelector) al iniciar el juego.");
@@ -19,27 +18,19 @@ public class Controlador_Poderes : MonoBehaviour
     {
         if (Time.timeScale == 0) return;
 
-        // 1. PODERES DE UN SOLO TOQUE
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Debug.Log("PASO 1: La tecla X fue detectada correctamente.");
             EjecutarPoderDeToque();
         }
 
-        // 2. PODERES CONTINUOS DE MEDIDOR
         ProcesarPoderesContinuos();
     }
 
     private void EjecutarPoderDeToque()
     {
-        if (selectorUI == null)
-        {
-            Debug.LogError("PASO 2 FALLIDO: El selectorUI está vacío. El Player no puede ver el HUD.");
-            return;
-        }
+        if (selectorUI == null) return;
 
         string nombrePoder = selectorUI.ObtenerNombrePoderActual();
-        Debug.Log("PASO 2 ÉXITO: El HUD dice que el poder activo es: [" + nombrePoder + "]");
 
         // -- EMBESTIFRESA --
         if (nombrePoder == "Embestifresa")
@@ -48,12 +39,16 @@ public class Controlador_Poderes : MonoBehaviour
             EmbestifresaPower scriptImpulso = GetComponent<EmbestifresaPower>();
             if (scriptImpulso != null)
             {
-                Vector2 direccion = new Vector2(transform.localScale.x, 0).normalized;
-                scriptImpulso.EjecutarImpulso(direccion);
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Embestifresa disparada.");
+                float inputX = Input.GetAxisRaw("Horizontal");
+                float inputY = Input.GetAxisRaw("Vertical");
+                if (inputX == 0 && inputY == 0) inputX = transform.localScale.x > 0 ? 1 : -1;
+
+                Vector2 direccionDash = new Vector2(inputX, inputY).normalized;
+                scriptImpulso.EjecutarImpulso(direccionDash);
+
+                // Registro para Skill y UI
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script EmbestifresaPower en el Player.");
         }
         // -- PLATAFORMA ESTÁTICA --
         else if (nombrePoder == "Plataforma Estatica")
@@ -62,12 +57,10 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptPlataforma != null)
             {
                 scriptPlataforma.EjecutarPlataforma();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Plataforma Estática disparada.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script PlataformaEstaticaPower en el Player.");
         }
-        // -- COCA AGITADA (ELEVADOR) --
+        // -- COCA AGITADA --
         else if (nombrePoder == "Coca Agitada")
         {
             if (bloqueadoPorDesplazador) return;
@@ -75,10 +68,8 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptCocas != null)
             {
                 scriptCocas.EjecutarElevacion();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Coca Agitada disparada.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script CocaAgitadaPower en el Player.");
         }
         // -- RESETEO LOCAL --
         else if (nombrePoder == "Reseteo local")
@@ -87,10 +78,8 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptReseteo != null)
             {
                 scriptReseteo.EjecutarReseteo();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Reseteo Local disparado.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script ReseteoLocalPower en el Player.");
         }
         // -- BRÚJULA GRAVITACIONAL --
         else if (nombrePoder == "Brujula Gravitacional")
@@ -99,12 +88,9 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptBrujula != null)
             {
                 scriptBrujula.EjecutarBrujula();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Brújula Gravitacional disparada.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script BrujulaGravitacionalPower en el Player.");
         }
-        
         // -- CUBO REPULSOR --
         else if (nombrePoder == "Cubo Repulsor")
         {
@@ -112,10 +98,8 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptCubo != null)
             {
                 scriptCubo.EjecutarPoder();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Cubo Repulsor disparado.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script CuboRepulsorPower en el Player.");
         }
         // -- GEL ADHERENTE --
         else if (nombrePoder == "Gel Adherente")
@@ -124,10 +108,8 @@ public class Controlador_Poderes : MonoBehaviour
             if (scriptGel != null)
             {
                 scriptGel.EjecutarDisparo();
-                selectorUI.RegistrarUsoDePoder();
-                Debug.Log("PASO 3: Gel Adherente disparado.");
+                RegistrarEventoPoder(nombrePoder);
             }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script GelAdherentePower en el Player.");
         }
         // -- PASO SOMBRA --
         else if (nombrePoder == "Paso Sombra")
@@ -135,47 +117,28 @@ public class Controlador_Poderes : MonoBehaviour
             PasoSombraPower scriptSombra = GetComponent<PasoSombraPower>();
             if (scriptSombra != null)
             {
-                // Solo si la función retorna TRUE (Fase 2 completada), descontamos del HUD
-                bool seConsumio = scriptSombra.EjecutarPasoSombra();
-                if (seConsumio)
-                {
-                    selectorUI.RegistrarUsoDePoder();
-                }
-                Debug.Log("PASO 3: Paso Sombra accionado.");
-            }
-            else Debug.LogError("PASO 3 FALLIDO: Falta el script PasoSombraPower en el Player.");
-        }
-        // -- NUEVO: DESPLAZADOR --
-        else if (nombrePoder == "Desplazador")
-        {
-            DesplazadorPower scriptDesp = GetComponent<DesplazadorPower>();
-            if (scriptDesp != null)
-            {
-                scriptDesp.EjecutarPoder();
-                selectorUI.RegistrarUsoDePoder();
+                if (scriptSombra.EjecutarPasoSombra()) RegistrarEventoPoder(nombrePoder);
             }
         }
-        // -- IMÁN --
-        else if (nombrePoder == "Iman")
+        // -- DESPLAZADOR, IMÁN, SINGULARIDAD --
+        else if (nombrePoder == "Desplazador" || nombrePoder == "Iman" || nombrePoder == "Singularidad")
         {
-            ImanPower scriptIman = GetComponent<ImanPower>();
-            if (scriptIman != null)
-            {
-                scriptIman.EjecutarIman();
-            }
+            // Lógica simplificada para estos poderes
+            if (nombrePoder == "Desplazador") GetComponent<DesplazadorPower>()?.EjecutarPoder();
+            if (nombrePoder == "Iman") GetComponent<ImanPower>()?.EjecutarIman();
+            if (nombrePoder == "Singularidad") GetComponent<SingularidadPower>()?.EjecutarSingularidad();
+
+            RegistrarEventoPoder(nombrePoder);
         }
-        // -- SINGULARIDAD --
-        else if (nombrePoder == "Singularidad")
+    }
+
+    // Función auxiliar para no repetir código
+    private void RegistrarEventoPoder(string nombre)
+    {
+        selectorUI.RegistrarUsoDePoder();
+        if (SkillManager.Instance != null)
         {
-            SingularidadPower scriptSingularidad = GetComponent<SingularidadPower>();
-            if (scriptSingularidad != null)
-            {
-                scriptSingularidad.EjecutarSingularidad();
-            }
-        }
-        else
-        {
-            Debug.LogWarning("PASO 3: El nombre [" + nombrePoder + "] no coincide con ningún 'if' programado de toque.");
+            SkillManager.Instance.RegistraUsoPoder(nombre);
         }
     }
 
@@ -184,15 +147,17 @@ public class Controlador_Poderes : MonoBehaviour
         if (selectorUI == null) return;
         string nombrePoder = selectorUI.ObtenerNombrePoderActual();
 
-        // -- G-INVERSOR --
+        // G-INVERSOR
         GInversorPower scriptGravedad = GetComponent<GInversorPower>();
         if (scriptGravedad != null)
         {
             bool quiereInvertir = (nombrePoder == "G-Inversor") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptGravedad.ProcesarInversion(quiereInvertir);
+            // Nota: Los continuos suelen registrarse diferente, pero para el Skill 
+            // podrías registrarlo solo cuando Input.GetKeyDown(KeyCode.X)
         }
 
-        // -- MOCHILA DE COCAS --
+        // MOCHILA DE COCAS
         MochilaCocasPower scriptMochila = GetComponent<MochilaCocasPower>();
         if (scriptMochila != null)
         {

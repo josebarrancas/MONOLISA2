@@ -18,6 +18,6 @@ MonoBehaviour:
   etiquetas:
   - horizontal
   - crear_obstaculos
-  tipo: 0
-  cantidadUsos: 0
+  tipo: 1
+  cantidadUsos: 3
   cargaMedidor: 0

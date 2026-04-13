@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Lvl_1_Based
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   nombreEscena: Lvl_1_Based
+  ID: 1
   etiquetasNivel: []
-  ID: 

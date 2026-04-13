@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Coca Agitada
   explicacion: 
-  icono: {fileID: 0}
+  icono: {fileID: 497262521754365963, guid: b24c6e557bf863249bd2cac6a53a83b7, type: 3}
   etiquetas:
   - vertical
   - impulsar

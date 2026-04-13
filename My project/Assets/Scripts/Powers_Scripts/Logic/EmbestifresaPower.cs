@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class EmbestifresaPower : MonoBehaviour
 {
     [Header("Configuracion del Poder")]
     public float fuerzaImpulso = 30f; // Un valor entre 25 y 40 es ideal
-    public float tiempoLibre = 0.2f;  // Duración del Dash
+    public float tiempoLibreHorizontal = 0.2f;  // Duración del Dash
+    public float fuerzaGravedad = 3f; // Fuerza de la gravedad para saltos verticales
+    public float tiempoLibreVertical = 0.5f; // Duracion del Dash vertical
 
     [HideInInspector]
     public bool estaEmbistiendo = false;
@@ -32,17 +35,28 @@ public class EmbestifresaPower : MonoBehaviour
     private IEnumerator AplicarVelocidadDash(Vector2 dir)
     {
         estaEmbistiendo = true;
+        float gravedadOriginal = rb.gravityScale;
 
         // 1. Guardamos tu Gravedad de 5 y la apagamos para que no "pese" el personaje
-        float gravedadOriginal = rb.gravityScale;
-        rb.gravityScale = 0;
+        if (dir.y == 1 || dir.y == -1)
+        {
+
+            rb.gravityScale = fuerzaGravedad; ;
+
+        }
+        else
+        {
+            rb.gravityScale = 0;
+        }
+
+
 
         // 2. VELOCIDAD DIRECTA: Esto ignora la masa y el rozamiento del suelo.
         // Forzamos al Rigidbody a moverse a la velocidad de la fuerza elegida.
         rb.linearVelocity = dir * fuerzaImpulso;
 
         // 3. Esperamos el tiempo del dash (0.2s)
-        yield return new WaitForSeconds(tiempoLibre);
+        yield return new WaitForSeconds(tiempoLibreHorizontal);
 
         // 4. Frenado suave al final (opcional, puedes quitarlo si quieres que siga con inercia)
         rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);

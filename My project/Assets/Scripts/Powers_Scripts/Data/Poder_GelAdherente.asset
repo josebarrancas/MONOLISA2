@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Gel Adherente
   explicacion: 
-  icono: {fileID: 0}
+  icono: {fileID: 8299586177871227690, guid: a2de69890c37a864c8c8cef4d0f3d360, type: 3}
   etiquetas:
   - Vertical
   - Crear_plataforma
