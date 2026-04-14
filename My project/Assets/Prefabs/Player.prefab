@@ -370,7 +370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movimiento
   Speed: 7
-  JumpForce: 34
+  JumpForce: 30
   enZonaDesplazador: 0
 --- !u!95 &6657297403361711549
 Animator:
@@ -424,9 +424,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05066a0c3705b4546b3b8b4290028e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlataformaEstaticaPower
-  plataformaPrefab: {fileID: 0}
+  plataformaPrefab: {fileID: 5523742962656968668, guid: faae3dc42285710439c09ae20333243a, type: 3}
   tiempoDeVida: 0
-  offsetVertical: -1
+  offsetVertical: -2
   limiteMaximoEnPantalla: 3
   cargasRestantes: 3
 --- !u!114 &538915837278768537

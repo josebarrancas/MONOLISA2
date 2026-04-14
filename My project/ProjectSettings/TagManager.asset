@@ -9,6 +9,7 @@ TagManager:
   - enganche
   - flotante
   - Flotante
+  - estatico
   layers:
   - Default
   - TransparentFX
