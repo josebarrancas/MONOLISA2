@@ -201,7 +201,6 @@ GameObject:
   - component: {fileID: 538915837278768537}
   - component: {fileID: 5463536853756694507}
   - component: {fileID: 1886306250597773011}
-  - component: {fileID: 3206155563604286476}
   - component: {fileID: 8183459161183111272}
   - component: {fileID: 608322835041253787}
   - component: {fileID: 4749765767927947665}
@@ -210,6 +209,7 @@ GameObject:
   - component: {fileID: 7003110258940388403}
   - component: {fileID: 4583819007252286547}
   - component: {fileID: 4069241558945384995}
+  - component: {fileID: -7119622624057941546}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -478,19 +478,6 @@ MonoBehaviour:
   velocidadDescensoLento: 2
   nivelMedidor: 0
   estaUsando: 0
---- !u!114 &3206155563604286476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4276265352606661548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd3db7636e48655428a2c5b7a8cd8b22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controlador_Poderes
-  bloqueadoPorDesplazador: 0
 --- !u!114 &8183459161183111272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,3 +613,17 @@ MonoBehaviour:
   - Entrada
   - Salida
   - Dead
+--- !u!114 &-7119622624057941546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4276265352606661548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e5fd7a33b224f4c857e8846234f065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Controlador_Poderes_Principal
+  bloqueadoPorDesplazador: 0
+  miHUD: {fileID: 4940137337821013573, guid: 7fd9da2b6dd540e42afdbaee5d905dbe, type: 3}

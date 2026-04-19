@@ -24,24 +24,21 @@ public class LevelLoader : MonoBehaviour
 
     public void CargarSiguienteNivel(string dificultad)
     {
-        // Si acabamos de pasar el nivel X, sumamos para ir al nivel X + 1
-        nivelActualIndice++;
-
         if (nivelActualIndice < nivelesDeEstaPartida.Count)
         {
-            // Obtenemos el nombre base de la escena desde el ScriptableObject
-            string nombreBaseEscena = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
+            // 1. Obtenemos el nombre completo que tiene el ScriptableObject
+            // Ejemplo: "Lvl_1_Based"
+            string nombreEscenaBased = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
 
-            // Construimos el nombre inteligente: "NivelAgua_Issue"
-            string escenaFinal = nombreBaseEscena + "_" + dificultad;
+            // 2. El TRUCO: Reemplazamos "Based" por "Issue" o "Solution"
+            // Si nombreEscenaBased es "Lvl_1_Based", resultado será "Lvl_1_Issue"
+            string escenaFinal = nombreEscenaBased.Replace("Based", dificultad);
 
-            Debug.Log($"Cargando Nivel {nivelActualIndice + 1}: {escenaFinal}");
+            Debug.Log($"Nivel Base: {nombreEscenaBased} -> Cargando Variante: {escenaFinal}");
+
+            // 3. Aumentamos el índice para la próxima y cargamos
+            nivelActualIndice++;
             UnityEngine.SceneManagement.SceneManager.LoadScene(escenaFinal);
-        }
-        else
-        {
-            Debug.Log("¡Felicidades Jorge! Has completado la fase.");
-            // Aquí podrías cargar una escena de "Resultados Finales"
         }
     }
 }

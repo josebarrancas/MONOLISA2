@@ -16,7 +16,7 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: -4356433154330858415, guid: f1560ccf9299b014a80bba83e780ecdf, type: 3}
   etiquetas:
-  - general
+  - General
   tipo: 0
   cantidadUsos: 1
   cargaMedidor: 0

@@ -66,8 +66,12 @@ public class PlataformaEstaticaPower : MonoBehaviour
             plataformasCreadas.Add(plataformaInstanciada);
 
             // 4. RESTAMOS LA CARGA Y REPORTAMOS
-            cargasRestantes--;
-            Debug.Log("Plataforma creada. Cargas restantes: " + cargasRestantes);
+            if (cargasRestantes > 0)
+            { 
+                cargasRestantes--;
+                Debug.Log("Plataforma creada. Cargas restantes: " + cargasRestantes);
+            }
+            
         }
         else
         {

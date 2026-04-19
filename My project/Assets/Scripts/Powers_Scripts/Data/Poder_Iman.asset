@@ -16,7 +16,7 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: 2060984682725818545, guid: 32362fedca9521543b26cb49c603bc71, type: 3}
   etiquetas:
-  - Cruzar_Abismo
+  - Cruzar Abismo
   tipo: 1
   cantidadUsos: 3
   cargaMedidor: 0

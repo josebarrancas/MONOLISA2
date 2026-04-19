@@ -16,7 +16,7 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: 497262521754365963, guid: b24c6e557bf863249bd2cac6a53a83b7, type: 3}
   etiquetas:
-  - vertical
+  - Vertical
   tipo: 2
   cantidadUsos: 0
   cargaMedidor: 30

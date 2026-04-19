@@ -54,7 +54,7 @@ public class Controlador_Poderes : MonoBehaviour
         else if (nombrePoder == "Plataforma Estatica")
         {
             PlataformaEstaticaPower scriptPlataforma = GetComponent<PlataformaEstaticaPower>();
-            if (scriptPlataforma != null)
+            if (scriptPlataforma != null && scriptPlataforma.cargasRestantes > 0)
             {
                 scriptPlataforma.EjecutarPlataforma();
                 RegistrarEventoPoder(nombrePoder);

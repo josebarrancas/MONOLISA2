@@ -8,7 +8,7 @@ public class PowerSelector : MonoBehaviour
     [Header("Base de Datos de Poderes")]
     public List<PoderData> todosLosPoderes = new List<PoderData>();
     private List<PoderData> mis9Poderes = new List<PoderData>();
-    private int indiceActual ;
+    private int indiceActual;
 
     [Header("Referencias UI")]
     public RectTransform circuloAzul;
@@ -19,13 +19,13 @@ public class PowerSelector : MonoBehaviour
     public TextMeshProUGUI txtNombre;
     public TextMeshProUGUI txtEtiquetas;
     public TextMeshProUGUI txtExplicacion;
-    public TextMeshProUGUI txtCargas; // <-- Asegúrate de crear este texto en tu HUD
+    public TextMeshProUGUI txtCargas;
 
     [Header("Configuración Círculo")]
-    public Vector3 escalaExpandida = new Vector3();
+    public Vector3 escalaExpandida;
 
     [Header("Configuración Icono")]
-    public Vector3 escalaIconoExpandido = new Vector3();
+    public Vector3 escalaIconoExpandido;
     public float desplazamientoDerecha;
 
     [Header("Animación")]
@@ -36,13 +36,13 @@ public class PowerSelector : MonoBehaviour
 
     void Start()
     {
-        if (iconoPoderActual != null && todosLosPoderes != null && todosLosPoderes.Count > 0)
+        if (iconoPoderActual != null)
             posicionOriginalIcono = iconoPoderActual.anchoredPosition;
 
         PrepararPartida();
     }
 
-    void PrepararPartida()
+   public void PrepararPartida()
     {
         if (todosLosPoderes == null || todosLosPoderes.Count == 0)
         {
@@ -51,30 +51,23 @@ public class PowerSelector : MonoBehaviour
         }
 
         mis9Poderes.Clear();
-        Debug.Log("Se detecto al menos un poder");
 
-
+        // Llenamos la lista local con instancias de todos los poderes asignados en el Inspector
         for (int i = 0; i < todosLosPoderes.Count; i++)
         {
             mis9Poderes.Add(Instantiate(todosLosPoderes[i]));
         }
 
-
-        while (mis9Poderes.Count < 1 && mis9Poderes.Count < 9)
-        {
-            mis9Poderes.Add(Instantiate(todosLosPoderes[0]));
-        }
-
-
         if (mis9Poderes.Count > 0)
         {
-            ActualizarVisualPoder(mis9Poderes[0]);
+            indiceActual = 0;
+            ActualizarVisualPoder(mis9Poderes[indiceActual]);
         }
     }
 
-        void Update()
+    void Update()
     {
-        if (this == null || circuloAzul == null) return;
+        if (circuloAzul == null) return;
 
         expandido = Input.GetKey(KeyCode.C);
 
@@ -86,9 +79,11 @@ public class PowerSelector : MonoBehaviour
 
         float delta = Time.unscaledDeltaTime * velocidadSuavizado;
 
+        // Animación del Círculo
         Vector3 objetivoCirculo = expandido ? escalaExpandida : Vector3.one;
         circuloAzul.localScale = Vector3.Lerp(circuloAzul.localScale, objetivoCirculo, delta);
 
+        // Animación del Icono
         Vector3 objetivoEscalaIcono = expandido ? escalaIconoExpandido : Vector3.one;
         iconoPoderActual.localScale = Vector3.Lerp(iconoPoderActual.localScale, objetivoEscalaIcono, delta);
 
@@ -98,19 +93,16 @@ public class PowerSelector : MonoBehaviour
 
         iconoPoderActual.anchoredPosition = Vector3.Lerp(iconoPoderActual.anchoredPosition, objetivoPosicionIcono, delta);
 
+        // Animación del texto (Alpha)
         grupoInformacion.alpha = Mathf.Lerp(grupoInformacion.alpha, expandido ? 1 : 0, delta);
     }
 
     void CambiarPoder(int direccion)
     {
-        //========================================
-        //          Borrar los debugs
-        //========================================
-        Debug.Log("La direccion es: " + direccion);
+        if (mis9Poderes.Count == 0) return;
+
         indiceActual = (indiceActual + direccion + mis9Poderes.Count) % mis9Poderes.Count;
         ActualizarVisualPoder(mis9Poderes[indiceActual]);
-        Debug.Log("El poder actual es: " + mis9Poderes[indiceActual].nombre);
-        Debug.Log("El indice actual es: " + indiceActual);
     }
 
     public void ActualizarVisualPoder(PoderData datos)
@@ -121,26 +113,24 @@ public class PowerSelector : MonoBehaviour
         txtEtiquetas.text = string.Join(" / ", datos.etiquetas);
         txtExplicacion.text = datos.explicacion;
 
-        // Actualizamos las cargas si el poder es de tipo Varios
         if (datos.tipo == TipoUso.Varios)
             txtCargas.text = "Usos: " + datos.cantidadUsos;
         else
             txtCargas.text = "";
 
-        iconoPoderActual.GetComponent<Image>().sprite = datos.icono;
+        Image img = iconoPoderActual.GetComponent<Image>();
+        if (img != null) img.sprite = datos.icono;
     }
 
-    // --- NUEVAS FUNCIONES DE COMUNICACIÓN ---
-
-    // Devuelve el nombre del poder actual para que el Player sepa qué disparar
     public string ObtenerNombrePoderActual()
     {
-        return mis9Poderes[indiceActual].nombre;
+        return mis9Poderes.Count > 0 ? mis9Poderes[indiceActual].nombre : "";
     }
 
-    // Descuenta una carga y refresca el HUD
     public void RegistrarUsoDePoder()
     {
+        if (mis9Poderes.Count == 0) return;
+
         PoderData actual = mis9Poderes[indiceActual];
         if (actual.tipo == TipoUso.Varios && actual.cantidadUsos > 0)
         {

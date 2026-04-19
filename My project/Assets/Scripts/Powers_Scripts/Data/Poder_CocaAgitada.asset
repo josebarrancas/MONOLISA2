@@ -16,8 +16,8 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: 497262521754365963, guid: b24c6e557bf863249bd2cac6a53a83b7, type: 3}
   etiquetas:
-  - vertical
-  - impulsar
+  - Vertical
+  - Impulsar
   tipo: 1
   cantidadUsos: 3
   cargaMedidor: 0

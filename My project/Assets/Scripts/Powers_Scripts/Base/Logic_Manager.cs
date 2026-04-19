@@ -9,21 +9,59 @@ using UnityEngine;
 /// </summary>
 public class Logic_Manager : MonoBehaviour
 {
-    //Declaramos la lista en donde guardaremos los 9 poderes que se le otorgen al jugador
-    //una vez empezada la partida
+    public static Logic_Manager instance; // Para acceder fácil: Logic_Manager.instance
+
+    [Header("Configuracion de Inicio")]
+    public List<PoderData> bibliotecaTotalPoderes;
+
     public List<PoderData> mazoJugador;
 
-    //Se declara la funcion en donde se guardaran las 3 etiquetas que mas se repiten en los 9 poderes
+    private void Start()
+    {
+        if (mazoJugador.Count == 0)
+        {
+            RepartirPoderesIniciales(9);
+        }
+    }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public List<string> ObtenerMayoriaEtiquetas()
     {
-        //Primero se juntan todas las etiquetas en una sola variable 
-        var etiquetas = mazoJugador.SelectMany(p => p.etiquetas)
-            .GroupBy(e => e)//Se agrupan por nombre y cuantas veces se repite esa etiqueta
-            .OrderByDescending(g => g.Count())//Se orden los grupos de etiquetas de mayor a menor numero de repeticiones
-            .Take(3).Select(g => g.Key)//Se toman las 3 etiquetas que mas se repiten
-            .ToList();//Se convierten es una lista de texto
+        if (mazoJugador == null || mazoJugador.Count == 0)
+        {
+            Debug.LogWarning("El mazo de poderes esta vacio! Devolviendo lista vacia");
+            Debug.Log($"Analizando mazo. Cantidad de poderes: {mazoJugador.Count}");
+            return new List<string>();
+        }
 
-        return etiquetas;
+        // Tu lógica de LINQ que está excelente
+        return mazoJugador.SelectMany(p => p.etiquetas)
+            .GroupBy(e => e)
+            .OrderByDescending(g => g.Count())
+            .Take(3)
+            .Select(g => g.Key)
+            .ToList();
+    }
+
+    public void RepartirPoderesIniciales(int cantidad)
+    {
+        mazoJugador = bibliotecaTotalPoderes.OrderBy(x => Random.value).Take(cantidad).ToList();
+        Debug.Log($"Se han otorgado {mazoJugador.Count} poderes.");
+
+        // LE AVISAMOS AL HUD QUE YA PUEDE LEER EL MAZO
+        FindObjectOfType<PowerSelector>().PrepararPartida();
     }
 
 }

@@ -17,7 +17,7 @@ MonoBehaviour:
   icono: {fileID: 2789923931394953461, guid: 526cc6d63a79e7941bb1995087e29d02, type: 3}
   etiquetas:
   - General
-  - New_gravedad
+  - New_Gravedad
   tipo: 0
   cantidadUsos: 1
   cargaMedidor: 0

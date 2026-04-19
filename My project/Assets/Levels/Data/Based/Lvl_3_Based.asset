@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c62025bb8366764e9428d29ccd3b909, type: 3}
-  m_Name: Lvl_Based_Tutorial
+  m_Name: Lvl_3_Based
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  nombreEscena: Lvl_Based_Tutorial
-  etiquetasNivel: []
-  ID: tutorial
+  nombreEscena: Lvl_3_Based
+  ID: 3
+  etiquetasNivel:
+  - Vertical
+  - Horizontal

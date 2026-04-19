@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5700850121218398944}
   - component: {fileID: 4465684530263010850}
   - component: {fileID: 3249031934463368716}
-  - component: {fileID: 8861748992020498690}
+  - component: {fileID: -4143569708952063504}
   m_Layer: 0
   m_Name: Puerta
   m_TagString: enganche
@@ -179,7 +179,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.9923, y: 2.4698596}
   m_EdgeRadius: 0
---- !u!114 &8861748992020498690
+--- !u!114 &-4143569708952063504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

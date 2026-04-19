@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7745789298496484220
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 119131338459037218}
+  - component: {fileID: 2955591388785042618}
+  m_Layer: 0
+  m_Name: Logic_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &119131338459037218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7745789298496484220}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.1952, y: 7.22055, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2955591388785042618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7745789298496484220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e4c444a3687c44c9f3a582e32dcbfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Logic_Manager
+  bibliotecaTotalPoderes:
+  - {fileID: 11400000, guid: 68226344aa8b59840b4750e6b515bcf9, type: 2}
+  - {fileID: 11400000, guid: 5b85d865fc3b1644fb17b02a351ccc24, type: 2}
+  - {fileID: 11400000, guid: 41393628f6a4ab14799c1776702daa07, type: 2}
+  - {fileID: 11400000, guid: 99608cab24477854da26bf134f4c3b7a, type: 2}
+  - {fileID: 11400000, guid: 1eeb275896917ce48b3234dd0b397eae, type: 2}
+  - {fileID: 11400000, guid: bcb87f1fb1ce50b4babebd531b1f12c2, type: 2}
+  - {fileID: 11400000, guid: a1364a92b66bee14eb5efba660dd73cc, type: 2}
+  - {fileID: 11400000, guid: 86c98a534bfbc2f449d73aa4d6ec5419, type: 2}
+  - {fileID: 11400000, guid: cf988d1fdf46f10438251635f2ec7887, type: 2}
+  - {fileID: 11400000, guid: 31bc9309efaa6c140bd318041e0c8b80, type: 2}
+  - {fileID: 11400000, guid: 92a328a6de337fa4395295973c822351, type: 2}
+  - {fileID: 11400000, guid: f468364e062cce349bfc26cbfb2ec42b, type: 2}
+  - {fileID: 11400000, guid: 81f37e856db2ab34f9278223888c05c5, type: 2}
+  mazoJugador: []

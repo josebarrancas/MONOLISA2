@@ -16,7 +16,7 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: -8814609989390411121, guid: 916ee8db454f49447a632001debfeb38, type: 3}
   etiquetas:
-  - horizontal
+  - Horizontal
   tipo: 0
   cantidadUsos: 1
   cargaMedidor: 0

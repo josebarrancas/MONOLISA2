@@ -16,8 +16,8 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: -3725306669493939449, guid: da8ce0004d7cb8342bf8d49366266d21, type: 3}
   etiquetas:
-  - horizontal
-  - crear_obstaculos
+  - Horizontal
+  - Crear_Obstaculos
   tipo: 0
   cantidadUsos: 0
   cargaMedidor: 0

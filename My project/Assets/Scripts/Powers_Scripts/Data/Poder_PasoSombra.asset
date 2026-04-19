@@ -16,7 +16,7 @@ MonoBehaviour:
   explicacion: 
   icono: {fileID: 4238186022132846889, guid: f6291d638525e19448453ed1be2fb006, type: 3}
   etiquetas:
-  - teletransportacion
+  - Teletransportacion
   tipo: 0
   cantidadUsos: 1
   cargaMedidor: 0

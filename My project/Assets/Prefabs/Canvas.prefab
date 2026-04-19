@@ -381,7 +381,7 @@ GameObject:
   - component: {fileID: 1231885073743033175}
   - component: {fileID: 7785626430973204726}
   - component: {fileID: 8756856525110778737}
-  - component: {fileID: 3208020287522376570}
+  - component: {fileID: 4940137337821013573}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -473,7 +473,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3208020287522376570
+--- !u!114 &4940137337821013573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -482,22 +482,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1614629046952285977}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 671c670106a0fe84ba99770d5cfe50b4, type: 3}
+  m_Script: {fileID: 11500000, guid: daccf8af8c515df47bfb042d18496112, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PowerSelector
+  m_EditorClassIdentifier: Assembly-CSharp::PowerSelectorPrincipal
   todosLosPoderes:
   - {fileID: 11400000, guid: 1eeb275896917ce48b3234dd0b397eae, type: 2}
-  - {fileID: 11400000, guid: 92a328a6de337fa4395295973c822351, type: 2}
-  - {fileID: 11400000, guid: a1364a92b66bee14eb5efba660dd73cc, type: 2}
-  - {fileID: 11400000, guid: cf988d1fdf46f10438251635f2ec7887, type: 2}
-  - {fileID: 11400000, guid: 5b85d865fc3b1644fb17b02a351ccc24, type: 2}
-  - {fileID: 11400000, guid: f468364e062cce349bfc26cbfb2ec42b, type: 2}
-  - {fileID: 11400000, guid: 41393628f6a4ab14799c1776702daa07, type: 2}
-  - {fileID: 11400000, guid: bcb87f1fb1ce50b4babebd531b1f12c2, type: 2}
-  - {fileID: 11400000, guid: 31bc9309efaa6c140bd318041e0c8b80, type: 2}
-  - {fileID: 11400000, guid: 99608cab24477854da26bf134f4c3b7a, type: 2}
-  - {fileID: 11400000, guid: 86c98a534bfbc2f449d73aa4d6ec5419, type: 2}
   - {fileID: 11400000, guid: 68226344aa8b59840b4750e6b515bcf9, type: 2}
+  - {fileID: 11400000, guid: 5b85d865fc3b1644fb17b02a351ccc24, type: 2}
+  - {fileID: 11400000, guid: 41393628f6a4ab14799c1776702daa07, type: 2}
+  - {fileID: 11400000, guid: 99608cab24477854da26bf134f4c3b7a, type: 2}
+  - {fileID: 11400000, guid: bcb87f1fb1ce50b4babebd531b1f12c2, type: 2}
+  - {fileID: 11400000, guid: a1364a92b66bee14eb5efba660dd73cc, type: 2}
+  - {fileID: 11400000, guid: 86c98a534bfbc2f449d73aa4d6ec5419, type: 2}
+  - {fileID: 11400000, guid: cf988d1fdf46f10438251635f2ec7887, type: 2}
+  - {fileID: 11400000, guid: 31bc9309efaa6c140bd318041e0c8b80, type: 2}
+  - {fileID: 11400000, guid: 92a328a6de337fa4395295973c822351, type: 2}
+  - {fileID: 11400000, guid: f468364e062cce349bfc26cbfb2ec42b, type: 2}
   - {fileID: 11400000, guid: 81f37e856db2ab34f9278223888c05c5, type: 2}
   circuloAzul: {fileID: 3723081570621305198}
   grupoInformacion: {fileID: 4813487193205920359}
