@@ -5,15 +5,14 @@ using UnityEngine.SceneManagement;
 public class MetaTutorial : MonoBehaviour
 {
     [Header("Referencias de Scripts")]
-    public Logic_Manager logicManager;    // Arrastra el objeto que tiene el Logic_Manager
-    public SorteoNiveles sorteador;      // Arrastra el objeto que tiene el SorteoNiveles
+    public Logic_Manager logicManager;
+    public SorteoNiveles sorteador;
 
     [Header("Configuración de Partida")]
     public int nivelesPorPartida = 3;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verificamos que sea el jugador quien cruza
         if (other.CompareTag("Player"))
         {
             EjecutarConfiguracionDePartida();
@@ -22,31 +21,42 @@ public class MetaTutorial : MonoBehaviour
 
     void EjecutarConfiguracionDePartida()
     {
-        // PASO 1: Obtener el Top 3 de etiquetas del mazo de 9 poderes
+        // PASO 1: Obtener etiquetas
         List<string> top3 = logicManager.ObtenerMayoriaEtiquetas();
 
-        if (top3.Count > 0)
+        if (top3 != null && top3.Count > 0)
         {
-            // PASO 2: Mandar ese Top 3 al sorteador para que elija la mejor ronda
+            // PASO 2: Sortear la mejor ronda
             List<LevelData> rondaGanadora = sorteador.mejorRondaNiveles(top3, nivelesPorPartida);
 
-            // PASO 3: Guardar la lista de niveles en GameData para que persistan entre escenas
-            GameData.nivelesDeEstaPartida = rondaGanadora;
-            GameData.indiceNivelActual = 0;
-
-            // PASO 4: Cargar el primer nivel de la ronda ganadora
-            if (rondaGanadora.Count > 0)
+            if (rondaGanadora != null && rondaGanadora.Count > 0)
             {
-                SceneManager.LoadScene(rondaGanadora[0].nombreEscena);
+                 
+                // En lugar de GameData, se lo entregamos al LevelLoader que es el que manda
+                if (LevelLoader.Instance != null)
+                {
+                    LevelLoader.Instance.EstablecerRondaGanadora(rondaGanadora);
+
+                    // PASO 4: Cargar el primer nivel usando el nombre del ScriptableObject
+                    // Usamos "Based" por defecto para el primer nivel
+                    string escenaInicial = rondaGanadora[0].nombreEscena;
+
+                    Debug.Log($"<color=cyan>MetaTutorial:</color> Enviando {rondaGanadora.Count} niveles al LevelLoader.");
+                    SceneManager.LoadScene(escenaInicial);
+                }
+                else
+                {
+                    Debug.LogError("Error: No se encontró el LevelLoader en la escena del menú.");
+                }
             }
             else
             {
-                Debug.LogError("El sorteador no devolvió niveles. Revisa tu lista de niveles guardados.");
+                Debug.LogError("El sorteador no devolvió niveles.");
             }
         }
         else
         {
-            Debug.LogError("No se pudieron obtener etiquetas del mazo. ¿El mazo tiene 9 poderes?");
+            Debug.LogError("No se pudieron obtener etiquetas del mazo.");
         }
     }
 }

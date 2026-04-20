@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 4583819007252286547}
   - component: {fileID: 4069241558945384995}
   - component: {fileID: -7119622624057941546}
+  - component: {fileID: 3003776807825933331}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -626,4 +627,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controlador_Poderes_Principal
   bloqueadoPorDesplazador: 0
-  miHUD: {fileID: 4940137337821013573, guid: 7fd9da2b6dd540e42afdbaee5d905dbe, type: 3}
+--- !u!114 &3003776807825933331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4276265352606661548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca38616d95b7d14490b94c5d8a48f60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ErrorDeCodigoPower
+  cargasRestantes: 1

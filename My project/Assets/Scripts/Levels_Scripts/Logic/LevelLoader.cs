@@ -5,40 +5,60 @@ public class LevelLoader : MonoBehaviour
 {
     public static LevelLoader Instance;
 
-    // Aquí guardaremos los LevelData que ganaron el sorteo
-    private List<LevelData> nivelesDeEstaPartida;
+    // Inicializamos la lista de una vez para que nunca sea null, solo vacía
+    private List<LevelData> nivelesDeEstaPartida = new List<LevelData>();
     public int nivelActualIndice = 0;
 
     void Awake()
     {
-        if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
-        else { Destroy(gameObject); }
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("<color=green>LevelLoader:</color> Instancia principal creada y protegida.");
+        }
+        else
+        {
+            Debug.Log("<color=yellow>LevelLoader:</color> Se detectó un duplicado en la escena, destruyéndolo...");
+            Destroy(gameObject);
+        }
     }
 
-    // Esta función la llamas DESPUÉS de que SorteoNiveles termine
     public void EstablecerRondaGanadora(List<LevelData> rondaElegida)
     {
+        if (rondaElegida == null)
+        {
+            Debug.LogError("<color=red>LevelLoader:</color> ¡ERROR! Intentaron entregar una lista nula desde el Sorteo.");
+            return;
+        }
+
         nivelesDeEstaPartida = rondaElegida;
         nivelActualIndice = 0;
+        Debug.Log($"<color=cyan>LevelLoader:</color> Datos recibidos con éxito. Total de niveles cargados: {nivelesDeEstaPartida.Count}");
     }
 
     public void CargarSiguienteNivel(string dificultad)
     {
+        // Verificamos si la lista tiene algo
+        if (nivelesDeEstaPartida.Count == 0)
+        {
+            Debug.LogError("<color=red>LevelLoader:</color> No se puede cargar nivel. La lista 'nivelesDeEstaPartida' está vacía. ¿Se llamó a EstablecerRondaGanadora desde el Menú?");
+            return;
+        }
+
         if (nivelActualIndice < nivelesDeEstaPartida.Count)
         {
-            // 1. Obtenemos el nombre completo que tiene el ScriptableObject
-            // Ejemplo: "Lvl_1_Based"
             string nombreEscenaBased = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
-
-            // 2. El TRUCO: Reemplazamos "Based" por "Issue" o "Solution"
-            // Si nombreEscenaBased es "Lvl_1_Based", resultado será "Lvl_1_Issue"
             string escenaFinal = nombreEscenaBased.Replace("Based", dificultad);
 
-            Debug.Log($"Nivel Base: {nombreEscenaBased} -> Cargando Variante: {escenaFinal}");
+            Debug.Log($"<color=white>Cargando:</color> {escenaFinal} (Índice: {nivelActualIndice})");
 
-            // 3. Aumentamos el índice para la próxima y cargamos
             nivelActualIndice++;
             UnityEngine.SceneManagement.SceneManager.LoadScene(escenaFinal);
+        }
+        else
+        {
+            Debug.Log("Partida finalizada. No hay más niveles en la lista.");
         }
     }
 }

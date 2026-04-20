@@ -23,6 +23,7 @@ public class ReseteoLocalPower : MonoBehaviour
     public static int save_Iman;
     public static int save_Brujula;
     public static int save_Singularidad;
+    public static int save_ErrorCodigo;
 
     public static int save_Reseteos;
 
@@ -131,6 +132,9 @@ public class ReseteoLocalPower : MonoBehaviour
 
         var sing = GetComponent<SingularidadPower>();
         if (sing != null) sing.cargasRestantes = save_Singularidad;
+
+        var error = GetComponent<ErrorDeCodigoPower>();
+        if (error != null) error.cargasRestantes = save_ErrorCodigo;
 
         cargasRestantes = save_Reseteos;
 

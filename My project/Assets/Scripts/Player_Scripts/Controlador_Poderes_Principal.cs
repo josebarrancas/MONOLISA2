@@ -132,6 +132,11 @@ public class Controlador_Poderes_Principal : MonoBehaviour
 
             RegistrarEventoPoder(nombrePoder);
         }
+        // -- ERROR DE CODIGO --
+        else if (nombrePoder == "Error de codigo")
+        {
+            if (nombrePoder == "Error de codigo") GetComponent<ErrorDeCodigoPower>()?.EjecutarIntercambio();
+        }
     }
 
     private void RegistrarEventoPoder(string nombre)

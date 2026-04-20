@@ -130,6 +130,16 @@ public class Controlador_Poderes : MonoBehaviour
 
             RegistrarEventoPoder(nombrePoder);
         }
+        // -- ERROR DE CODIGO --
+        else if (nombrePoder == "Error de codigo")
+        {
+            ErrorDeCodigoPower scriptError = GetComponent<ErrorDeCodigoPower>();
+            if (scriptError != null)
+            {
+                scriptError.EjecutarIntercambio();
+                selectorUI.RegistrarUsoDePoder();
+            }
+        }
     }
 
     // Función auxiliar para no repetir código
