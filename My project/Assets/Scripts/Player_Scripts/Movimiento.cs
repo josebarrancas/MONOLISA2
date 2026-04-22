@@ -49,7 +49,7 @@ public class Movimiento : MonoBehaviour
         {
             rb.AddForce(transform.up * JumpForce, ForceMode2D.Impulse);
         }
-    }o9
+    }
 
     private void FixedUpdate()
     {
