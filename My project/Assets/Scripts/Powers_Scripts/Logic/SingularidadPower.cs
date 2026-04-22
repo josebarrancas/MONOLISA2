@@ -26,23 +26,22 @@ public class SingularidadPower : MonoBehaviour
         "Player", "Entrada", "Salida", "Dead"
     };
 
-    private PowerSelector selectorUI;
+    [Header("Estado (Controlado desde el Controlador Principal)")]
+    public bool estaSeleccionado = false;
+
     private Vector2 direccionApuntada;
 
     void Start()
     {
-        selectorUI = FindObjectOfType<PowerSelector>();
         if (miraVisualX != null) miraVisualX.SetActive(false);
     }
 
     void Update()
     {
-        if (selectorUI == null || Time.timeScale == 0) return;
+        if (Time.timeScale == 0) return;
 
-        string poderActivo = selectorUI.ObtenerNombrePoderActual();
-
-        // REGLA: "mientras se encuentre seleccionado el poder, aparecerá un símbolo"
-        if (poderActivo == "Singularidad")
+        // La visualización de la mira ahora depende de lo que dicte el Controlador Principal
+        if (estaSeleccionado)
         {
             if (miraVisualX != null) miraVisualX.SetActive(true);
             ActualizarMira();
@@ -93,13 +92,12 @@ public class SingularidadPower : MonoBehaviour
             }
         }
 
-        // Consumimos el uso
+        // Consumimos el uso (El registro del evento ya lo hace el Controlador Principal)
         cargasRestantes--;
-        selectorUI.RegistrarUsoDePoder();
         Debug.Log("Singularidad: Área purgada. Cargas restantes: " + cargasRestantes);
     }
 
-    // Herramienta visual exclusiva para usted (se ve en la pestaña Scene del editor)
+    // Herramienta visual exclusiva para el editor
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.magenta;

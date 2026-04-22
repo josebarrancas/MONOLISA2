@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class Controlador_Poderes_Principal : MonoBehaviour
 {
-    // Usaremos solo una variable para evitar confusiones
     private PowerSelectorPrincipal miHUD;
-    public bool bloqueadoPorDesplazador = false;
+    [HideInInspector] public bool bloqueadoPorDesplazador = false;
 
     void Start()
     {
-        // Buscamos el HUD en la escena actual
         miHUD = FindObjectOfType<PowerSelectorPrincipal>();
 
         if (miHUD == null)
@@ -21,143 +19,166 @@ public class Controlador_Poderes_Principal : MonoBehaviour
     {
         if (Time.timeScale == 0 || miHUD == null) return;
 
-        // Poderes de un solo toque
         if (Input.GetKeyDown(KeyCode.X))
         {
             EjecutarPoderDeToque();
         }
 
-        // Poderes que requieren mantener la tecla
         ProcesarPoderesContinuos();
     }
 
     private void EjecutarPoderDeToque()
     {
-        // Obtenemos el nombre de forma segura
-        string nombrePoder = miHUD.ObtenerNombrePoderActual();
-        if (string.IsNullOrEmpty(nombrePoder)) return;
+        string rawNombre = miHUD.ObtenerNombrePoderActual();
+        if (string.IsNullOrEmpty(rawNombre)) return;
 
-        // -- EMBESTIFRESA --
-        if (nombrePoder == "Embestifresa")
+        // Blindaje contra errores de escritura
+        string nombre = rawNombre.Trim().ToLower();
+
+        // -- PODERES DE TOQUE --
+
+        // EMBESTIFRESA
+        if (nombre == "embestifresa")
         {
             if (bloqueadoPorDesplazador) return;
-            EmbestifresaPower scriptImpulso = GetComponent<EmbestifresaPower>();
-            if (scriptImpulso != null)
+            EmbestifresaPower script = GetComponent<EmbestifresaPower>();
+            if (script != null)
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
                 float inputY = Input.GetAxisRaw("Vertical");
                 if (inputX == 0 && inputY == 0) inputX = transform.localScale.x > 0 ? 1 : -1;
 
                 Vector2 direccionDash = new Vector2(inputX, inputY).normalized;
-                scriptImpulso.EjecutarImpulso(direccionDash);
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarImpulso(direccionDash);
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- PLATAFORMA ESTÁTICA --
-        else if (nombrePoder == "Plataforma Estatica")
+        // PLATAFORMA ESTÁTICA
+        else if (nombre == "plataforma estatica" || nombre == "plataforma estática")
         {
-            PlataformaEstaticaPower scriptPlataforma = GetComponent<PlataformaEstaticaPower>();
-            if (scriptPlataforma != null && scriptPlataforma.cargasRestantes > 0)
+            PlataformaEstaticaPower script = GetComponent<PlataformaEstaticaPower>();
+            if (script != null && script.cargasRestantes > 0)
             {
-                scriptPlataforma.EjecutarPlataforma();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarPlataforma();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- COCA AGITADA --
-        else if (nombrePoder == "Coca Agitada")
+        // COCA AGITADA
+        else if (nombre == "coca agitada")
         {
             if (bloqueadoPorDesplazador) return;
-            CocaAgitadaPower scriptCocas = GetComponent<CocaAgitadaPower>();
-            if (scriptCocas != null)
+            CocaAgitadaPower script = GetComponent<CocaAgitadaPower>();
+            if (script != null)
             {
-                scriptCocas.EjecutarElevacion();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarElevacion();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- RESETEO LOCAL --
-        else if (nombrePoder == "Reseteo local")
+        // RESETEO LOCAL
+        else if (nombre == "reseteo local")
         {
-            ReseteoLocalPower scriptReseteo = GetComponent<ReseteoLocalPower>();
-            if (scriptReseteo != null)
+            ReseteoLocalPower script = GetComponent<ReseteoLocalPower>();
+            if (script != null)
             {
-                scriptReseteo.EjecutarReseteo();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarReseteo();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- BRÚJULA GRAVITACIONAL --
-        else if (nombrePoder == "Brujula Gravitacional")
+        // BRÚJULA GRAVITACIONAL
+        else if (nombre == "brujula gravitacional" || nombre == "brújula gravitacional")
         {
-            BrujulaGravitacionalPower scriptBrujula = GetComponent<BrujulaGravitacionalPower>();
-            if (scriptBrujula != null)
+            BrujulaGravitacionalPower script = GetComponent<BrujulaGravitacionalPower>();
+            if (script != null)
             {
-                scriptBrujula.EjecutarBrujula();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarBrujula();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- CUBO REPULSOR --
-        else if (nombrePoder == "Cubo Repulsor")
+        // CUBO REPULSOR
+        else if (nombre == "cubo repulsor")
         {
-            CuboRepulsorPower scriptCubo = GetComponent<CuboRepulsorPower>();
-            if (scriptCubo != null)
+            CuboRepulsorPower script = GetComponent<CuboRepulsorPower>();
+            if (script != null)
             {
-                scriptCubo.EjecutarPoder();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarPoder();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- GEL ADHERENTE --
-        else if (nombrePoder == "Gel Adherente")
+        // GEL ADHERENTE
+        else if (nombre == "gel adherente")
         {
-            GelAdherentePower scriptGel = GetComponent<GelAdherentePower>();
-            if (scriptGel != null)
+            GelAdherentePower script = GetComponent<GelAdherentePower>();
+            if (script != null)
             {
-                scriptGel.EjecutarDisparo();
-                RegistrarEventoPoder(nombrePoder);
+                script.EjecutarDisparo();
+                RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- PASO SOMBRA --
-        else if (nombrePoder == "Paso Sombra")
+        // PASO SOMBRA
+        else if (nombre == "paso sombra")
         {
-            PasoSombraPower scriptSombra = GetComponent<PasoSombraPower>();
-            if (scriptSombra != null)
+            PasoSombraPower script = GetComponent<PasoSombraPower>();
+            if (script != null)
             {
-                if (scriptSombra.EjecutarPasoSombra()) RegistrarEventoPoder(nombrePoder);
+                if (script.EjecutarPasoSombra()) RegistrarEventoPoder(rawNombre);
             }
         }
-        // -- DESPLAZADOR, IMÁN, SINGULARIDAD --
-        else if (nombrePoder == "Desplazador" || nombrePoder == "Iman" || nombrePoder == "Singularidad")
+        // SINGULARIDAD
+        else if (nombre == "singularidad")
         {
-            if (nombrePoder == "Desplazador") GetComponent<DesplazadorPower>()?.EjecutarPoder();
-            if (nombrePoder == "Iman") GetComponent<ImanPower>()?.EjecutarIman();
-            if (nombrePoder == "Singularidad") GetComponent<SingularidadPower>()?.EjecutarSingularidad();
-
-            RegistrarEventoPoder(nombrePoder);
+            SingularidadPower script = GetComponent<SingularidadPower>();
+            if (script != null)
+            {
+                script.EjecutarSingularidad();
+                RegistrarEventoPoder(rawNombre);
+            }
         }
-        // -- ERROR DE CODIGO --
-        else if (nombrePoder == "Error de codigo")
+        // ERROR DE CODIGO
+        else if (nombre == "error de codigo" || nombre == "error de código")
         {
-            if (nombrePoder == "Error de codigo") GetComponent<ErrorDeCodigoPower>()?.EjecutarIntercambio();
+            ErrorDeCodigoPower script = GetComponent<ErrorDeCodigoPower>();
+            if (script != null)
+            {
+                script.EjecutarIntercambio();
+                RegistrarEventoPoder(rawNombre);
+            }
+        }
+        // IMÁN / DESPLAZADOR
+        else if (nombre == "iman" || nombre == "imán" || nombre == "desplazador")
+        {
+            if (nombre.Contains("desplazador"))
+            {
+                GetComponent<DesplazadorPower>()?.EjecutarPoder();
+                RegistrarEventoPoder(rawNombre); 
+            }
+            if (nombre.Contains("iman"))
+            {
+                GetComponent<ImanPower>()?.EjecutarIman();
+            }
         }
     }
 
-    private void RegistrarEventoPoder(string nombre)
+    private void RegistrarEventoPoder(string nombreOriginal)
     {
         miHUD.RegistrarUsoDePoder();
         if (SkillManager.Instance != null)
         {
-            SkillManager.Instance.RegistraUsoPoder(nombre);
+            SkillManager.Instance.RegistraUsoPoder(nombreOriginal);
         }
     }
 
     private void ProcesarPoderesContinuos()
     {
-        string nombrePoder = miHUD.ObtenerNombrePoderActual();
-        if (string.IsNullOrEmpty(nombrePoder)) return;
+        string rawNombre = miHUD.ObtenerNombrePoderActual();
+        if (string.IsNullOrEmpty(rawNombre)) return;
+
+        string nombre = rawNombre.Trim().ToLower();
 
         // G-INVERSOR
         GInversorPower scriptGravedad = GetComponent<GInversorPower>();
         if (scriptGravedad != null)
         {
-            bool quiereInvertir = (nombrePoder == "G-Inversor") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
+            bool quiereInvertir = (nombre == "g-inversor") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptGravedad.ProcesarInversion(quiereInvertir);
         }
 
@@ -165,8 +186,14 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         MochilaCocasPower scriptMochila = GetComponent<MochilaCocasPower>();
         if (scriptMochila != null)
         {
-            bool usandoMochila = (nombrePoder == "Mochila de Cocas") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
+            bool usandoMochila = (nombre == "mochila de cocas") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptMochila.ProcesarVuelo(usandoMochila);
+        }
+
+        SingularidadPower scriptSingularidad = GetComponent<SingularidadPower>();
+        if (scriptSingularidad != null)
+        {
+            scriptSingularidad.estaSeleccionado = (nombre == "singularidad");
         }
     }
 }

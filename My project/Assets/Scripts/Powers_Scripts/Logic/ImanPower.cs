@@ -25,7 +25,16 @@ public class ImanPower : MonoBehaviour
     public void GastarCarga()
     {
         cargasRestantes--;
-        FindObjectOfType<PowerSelector>().RegistrarUsoDePoder();
+
+        // 1. Notificamos al nuevo HUD Principal
+        PowerSelectorPrincipal hud = FindObjectOfType<PowerSelectorPrincipal>();
+        if (hud != null) hud.RegistrarUsoDePoder();
+
+        // 2. Notificamos al gestor de habilidades para que cuente en el resultado final
+        if (SkillManager.Instance != null)
+        {
+            SkillManager.Instance.RegistraUsoPoder("Iman");
+        }
     }
 
     public void ResetearCargas() { cargasRestantes = 3; }

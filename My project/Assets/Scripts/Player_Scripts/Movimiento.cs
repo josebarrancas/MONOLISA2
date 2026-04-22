@@ -45,11 +45,11 @@ public class Movimiento : MonoBehaviour
         else Grounded = false;
 
         // SALTO RELATIVO
-        if (Input.GetKeyDown(KeyCode.W) && Grounded && !enZonaDesplazador)
+        if (Input.GetKeyDown(KeyCode.Z) && Grounded && !enZonaDesplazador)
         {
             rb.AddForce(transform.up * JumpForce, ForceMode2D.Impulse);
         }
-    }
+    }o9
 
     private void FixedUpdate()
     {
