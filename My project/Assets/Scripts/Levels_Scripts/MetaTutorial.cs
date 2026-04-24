@@ -13,36 +13,48 @@ public class MetaTutorial : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Verificamos que sea el jugador
         if (other.CompareTag("Player"))
         {
-            EjecutarConfiguracionDePartida();
+            // --- NUEVA CERRADURA DE COLECCIONABLES ---
+            // Le preguntamos al script de monedas si el contador ya llegó al máximo
+            if (MonedaColeccionable.TodasLasMonedasRecogidas())
+            {
+                EjecutarConfiguracionDePartida();
+            }
+            else
+            {
+                Debug.LogWarning("<color=orange>BLOQUEO TUTORIAL:</color> Aún no has recogido el dato (moneda) de esta zona.");
+            }
         }
     }
 
     void EjecutarConfiguracionDePartida()
     {
-        // PASO 1: Obtener etiquetas
         List<string> top3 = logicManager.ObtenerMayoriaEtiquetas();
 
         if (top3 != null && top3.Count > 0)
         {
-            // PASO 2: Sortear la mejor ronda
             List<LevelData> rondaGanadora = sorteador.mejorRondaNiveles(top3, nivelesPorPartida);
 
             if (rondaGanadora != null && rondaGanadora.Count > 0)
             {
-                 
-                // En lugar de GameData, se lo entregamos al LevelLoader que es el que manda
+
                 if (LevelLoader.Instance != null)
                 {
                     LevelLoader.Instance.EstablecerRondaGanadora(rondaGanadora);
 
-                    // PASO 4: Cargar el primer nivel usando el nombre del ScriptableObject
-                    // Usamos "Based" por defecto para el primer nivel
+
+
                     string escenaInicial = rondaGanadora[0].nombreEscena;
 
                     Debug.Log($"<color=cyan>MetaTutorial:</color> Enviando {rondaGanadora.Count} niveles al LevelLoader.");
-                    SceneManager.LoadScene(escenaInicial);
+
+                    // 1. Le "anotamos" al LevelLoader cuál es el nivel que sigue
+                    LevelLoader.Instance.proximaEscenaCargar = escenaInicial;
+
+                    // 2. Mandamos al jugador a la sala de espera (Pantalla de Selección)
+                    SceneManager.LoadScene("Pantalla_Seleccion");
                 }
                 else
                 {

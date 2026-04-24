@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_PasoSombra
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Paso Sombra
-  explicacion: 
+  explicacion: deja tu sombra atras para regresar despues
   icono: {fileID: 4238186022132846889, guid: f6291d638525e19448453ed1be2fb006, type: 3}
   etiquetas:
   - Teletransportacion

@@ -4,6 +4,9 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour
 {
     public static LevelLoader Instance;
+    public string proximaEscenaCargar;
+    [Header("Memoria de la Partida")]
+    public List<PoderData> poderesDeLaPartida = new List<PoderData>();
 
     // Inicializamos la lista de una vez para que nunca sea null, solo vacía
     private List<LevelData> nivelesDeEstaPartida = new List<LevelData>();
@@ -39,26 +42,40 @@ public class LevelLoader : MonoBehaviour
 
     public void CargarSiguienteNivel(string dificultad)
     {
-        // Verificamos si la lista tiene algo
-        if (nivelesDeEstaPartida.Count == 0)
+        // 1. Blindaje contra listas vacías
+        if (nivelesDeEstaPartida == null || nivelesDeEstaPartida.Count == 0)
         {
-            Debug.LogError("<color=red>LevelLoader:</color> No se puede cargar nivel. La lista 'nivelesDeEstaPartida' está vacía. ¿Se llamó a EstablecerRondaGanadora desde el Menú?");
+            Debug.LogError("Error Crítico: El LevelLoader no tiene niveles registrados.");
             return;
         }
 
+        // 2. ¿Aún hay niveles en la lista por jugar?
         if (nivelActualIndice < nivelesDeEstaPartida.Count)
         {
-            string nombreEscenaBased = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
-            string escenaFinal = nombreEscenaBased.Replace("Based", dificultad);
+            // Extraemos el nombre base del nivel
+            string nombreBase = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
 
-            Debug.Log($"<color=white>Cargando:</color> {escenaFinal} (Índice: {nivelActualIndice})");
+            // Guardamos el siguiente destino en la memoria
+            proximaEscenaCargar = nombreBase.Replace("Based", dificultad);
 
+            // Aumentamos el contador para la próxima puerta
             nivelActualIndice++;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(escenaFinal);
+
+            // Hacemos la parada técnica en la pantalla de Re-roll
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Pantalla_Seleccion");
         }
         else
         {
-            Debug.Log("Partida finalizada. No hay más niveles en la lista.");
+            // 3. ¡EL JUGADOR SOBREVIVIÓ A TODOS LOS NIVELES!
+            Debug.Log("<color=yellow>¡PARTIDA COMPLETADA!</color> Regresando al Hub...");
+
+            // Limpiamos la memoria para que la próxima partida empiece fresca
+            nivelActualIndice = 0;
+            nivelesDeEstaPartida.Clear();
+            poderesDeLaPartida.Clear();
+
+            // --- CAMBIE ESTE TEXTO POR EL NOMBRE EXACTO DE SU ESCENA DEL HUB ---
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Hub_Principal");
         }
     }
 }

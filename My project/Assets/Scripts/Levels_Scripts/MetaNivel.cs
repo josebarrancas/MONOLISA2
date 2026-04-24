@@ -12,35 +12,21 @@ public class MetaNivel : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Verificamos que sea el jugador quien toca la meta
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("¡Meta alcanzada! Procesando transición inteligente...");
+            if (!MonedaColeccionable.TodasLasMonedasRecogidas())
+            {
+                Debug.LogWarning("BLOQUEADO: No has recolectado todos los archivos de datos (monedas).");
+                return;
+            }
 
-            // 1. Validamos que los Managers existan en la escena
+            Debug.Log("¡Meta alcanzada y requisitos cumplidos!");
+
             if (SkillManager.Instance != null && LevelLoader.Instance != null)
             {
-                // 2. Ejecutamos el cálculo de la habilidad (Skill) basada en:
-                // Intentos, Tiempo y Uso de Poderes.
                 SkillManager.Instance.CalcularResultados();
-
-                // 3. Obtenemos el estado resultante ("Issue", "Based" o "Solution")
                 string dificultadDetectada = SkillManager.Instance.estadoActual;
-
-                Debug.Log($"Dificultad calculada para el siguiente reto: {dificultadDetectada}");
-
-                // 4. Le pedimos al LevelLoader que busque la siguiente escena 
-                // del set sorteado y le aplique la dificultad correspondiente.
                 LevelLoader.Instance.CargarSiguienteNivel(dificultadDetectada);
-            }
-            else
-            {
-                // Error de seguridad por si olvidaste poner los Managers en el menú de inicio
-                if (SkillManager.Instance == null)
-                    Debug.LogError("Falta el SkillManager en la escena.");
-
-                if (LevelLoader.Instance == null)
-                    Debug.LogError("Falta el LevelLoader en la escena.");
             }
         }
     }

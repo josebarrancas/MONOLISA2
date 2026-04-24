@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_Iman
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Iman
-  explicacion: 
+  explicacion: atrae objetos que no esten anclados hacia ti
   icono: {fileID: 2060984682725818545, guid: 32362fedca9521543b26cb49c603bc71, type: 3}
   etiquetas:
   - Cruzar Abismo

@@ -7,7 +7,9 @@ public class PowerSelectorPrincipal : MonoBehaviour
 {
     [Header("Base de Datos de Poderes")]
     public List<PoderData> todosLosPoderes = new List<PoderData>();
-    private List<PoderData> mis9Poderes = new List<PoderData>();
+
+    // CAMBIO: Renombrado a poderesEnUso para reflejar que ahora son 3
+    private List<PoderData> poderesEnUso = new List<PoderData>();
     private int indiceActual;
 
     [Header("Referencias UI")]
@@ -19,7 +21,7 @@ public class PowerSelectorPrincipal : MonoBehaviour
     public TextMeshProUGUI txtNombre;
     public TextMeshProUGUI txtEtiquetas;
     public TextMeshProUGUI txtExplicacion;
-    public TextMeshProUGUI txtCargas; // <-- Asegúrate de crear este texto en tu HUD
+    public TextMeshProUGUI txtCargas;
 
     [Header("Configuración Círculo")]
     public Vector3 escalaExpandida = new Vector3();
@@ -39,44 +41,46 @@ public class PowerSelectorPrincipal : MonoBehaviour
         if (iconoPoderActual != null)
             posicionOriginalIcono = iconoPoderActual.anchoredPosition;
 
-        // Intentar cargar los poderes inmediatamente al aparecer en la escena
         PrepararPartida();
-
-
     }
 
     public void PrepararPartida()
     {
-        // 1. Buscamos el Logic_Manager para obtener los poderes reales asignados
         if (Logic_Manager.instance == null)
         {
             Debug.LogError("No se encontró el Logic_Manager en la escena.");
             return;
         }
 
-        List<PoderData> poderesAsignados = Logic_Manager.instance.mazoJugador;
+        // CAMBIO CRÍTICO: Ahora le pedimos los 3 poderes finales, no los 9
+        List<PoderData> poderesAsignados = Logic_Manager.instance.poderesSeleccionados;
 
+        // RED DE SEGURIDAD (Para cuando haces pruebas directas en el nivel)
         if (poderesAsignados == null || poderesAsignados.Count == 0)
         {
-            Debug.LogWarning("El Logic_Manager tiene un mazo vacío. ¿Ya se repartieron los poderes?");
-            return;
+            Debug.LogWarning("No se hicieron selecciones en ReRoll. Cargando poderes de respaldo para pruebas.");
+            if (Logic_Manager.instance.mazoJugador != null && Logic_Manager.instance.mazoJugador.Count >= 3)
+            {
+                poderesAsignados = Logic_Manager.instance.mazoJugador.GetRange(0, 3);
+            }
+            else
+            {
+                return;
+            }
         }
 
-        // 2. Limpiamos la lista local del HUD
-        mis9Poderes.Clear();
+        poderesEnUso.Clear();
 
-        // 3. Clonamos los poderes del mazo para que el HUD tenga sus propias copias 
-        // (y así las cargas de uso no afecten al ScriptableObject original)
+        // Clonamos los 3 poderes seleccionados
         foreach (PoderData poder in poderesAsignados)
         {
-            mis9Poderes.Add(Instantiate(poder));
+            poderesEnUso.Add(Instantiate(poder));
         }
 
-        Debug.Log($"HUD configurado con {mis9Poderes.Count} poderes del mazo.");
+        Debug.Log($"<color=cyan>HUD configurado con los {poderesEnUso.Count} poderes elegidos en el ReRoll.</color>");
 
-        // 4. Mostramos el primer poder en el HUD
         indiceActual = 0;
-        ActualizarVisualPoder(mis9Poderes[indiceActual]);
+        ActualizarVisualPoder(poderesEnUso[indiceActual]);
     }
 
     void Update()
@@ -110,23 +114,19 @@ public class PowerSelectorPrincipal : MonoBehaviour
 
     void CambiarPoder(int direccion)
     {
-        //========================================
-        //          Borrar los debugs
-        //========================================
-        // PROTECCIÓN CRÍTICA: Si no hay poderes, no calculamos nada
-        if (mis9Poderes == null || mis9Poderes.Count == 0)
+        if (poderesEnUso == null || poderesEnUso.Count == 0)
         {
             Debug.LogWarning("Lista de poderes vacía en el HUD.");
             return;
         }
 
-        indiceActual = (indiceActual + direccion + mis9Poderes.Count) % mis9Poderes.Count;
-        ActualizarVisualPoder(mis9Poderes[indiceActual]);
+        // Esta fórmula matemática funciona perfecto para 3 poderes
+        indiceActual = (indiceActual + direccion + poderesEnUso.Count) % poderesEnUso.Count;
+        ActualizarVisualPoder(poderesEnUso[indiceActual]);
     }
 
     public void ActualizarVisualPoder(PoderData datos)
     {
-        // SEGURIDAD: Si no hay datos, no intentes actualizar nada
         if (datos == null)
         {
             Debug.LogWarning("Intentando actualizar HUD sin datos de poder.");
@@ -146,24 +146,19 @@ public class PowerSelectorPrincipal : MonoBehaviour
             iconoPoderActual.GetComponent<Image>().sprite = datos.icono;
     }
 
-    // --- NUEVAS FUNCIONES DE COMUNICACIÓN ---
-
-    // Devuelve el nombre del poder actual para que el Player sepa qué disparar
     public string ObtenerNombrePoderActual()
     {
-        // SEGURIDAD: Si la lista está vacía o el índice es inválido, devolvemos un string vacío
-        if (mis9Poderes == null || mis9Poderes.Count == 0)
+        if (poderesEnUso == null || poderesEnUso.Count == 0)
         {
             return "";
         }
 
-        return mis9Poderes[indiceActual].nombre;
+        return poderesEnUso[indiceActual].nombre;
     }
 
-    // Descuenta una carga y refresca el HUD
     public void RegistrarUsoDePoder()
     {
-        PoderData actual = mis9Poderes[indiceActual];
+        PoderData actual = poderesEnUso[indiceActual];
         if (actual.tipo == TipoUso.Varios && actual.cantidadUsos > 0)
         {
             actual.cantidadUsos--;

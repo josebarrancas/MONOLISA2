@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Poder_PlataformaEstatica
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Plataforma Estatica
-  explicacion: 
+  explicacion: "Crea una plataforma s\xF3lida en el aire."
   icono: {fileID: -3725306669493939449, guid: da8ce0004d7cb8342bf8d49366266d21, type: 3}
   etiquetas:
   - Horizontal
   - Crear_Obstaculos
-  tipo: 0
-  cantidadUsos: 0
+  tipo: 1
+  cantidadUsos: 2
   cargaMedidor: 0

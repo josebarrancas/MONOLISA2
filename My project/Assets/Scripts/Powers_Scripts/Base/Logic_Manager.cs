@@ -16,6 +16,9 @@ public class Logic_Manager : MonoBehaviour
 
     public List<PoderData> mazoJugador;
 
+    [Header("Poderes Activos (Para el Nivel)")]
+    public List<PoderData> poderesSeleccionados = new List<PoderData>();
+
     private void Start()
     {
         if (mazoJugador.Count == 0)

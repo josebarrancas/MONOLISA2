@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_ReseteoLocal
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Reseteo local
-  explicacion: 
+  explicacion: reinicia la sala sin perder un intento, pero si los usos
   icono: {fileID: -4356433154330858415, guid: f1560ccf9299b014a80bba83e780ecdf, type: 3}
   etiquetas:
   - General

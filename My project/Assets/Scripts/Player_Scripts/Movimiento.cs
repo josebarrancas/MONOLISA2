@@ -67,17 +67,14 @@ public class Movimiento : MonoBehaviour
     {
         if (collision.CompareTag("Dead"))
         {
-            BrujulaGravitacionalPower brujula = GetComponent<BrujulaGravitacionalPower>();
-            if (brujula != null && brujula.estaUsandoBrujula) return;
-
-
-            // Registramos la muerte del jugador antes de que se reinicie la escena
             if (SkillManager.Instance != null) SkillManager.Instance.intentosNivel++;
-           
-           
-            // Si el jugador cae al vacío, enderezamos el mundo antes de recargar la escena.
-            Physics2D.gravity = new Vector2(0, -9.81f);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+            // Antes de recargar, le avisamos al LevelLoader que queremos reintentar la MISMA escena
+            // Restamos 1 al índice porque el LevelLoader ya lo había aumentado al ganar
+            LevelLoader.Instance.nivelActualIndice--;
+
+            // Mandamos al jugador a la pantalla de selección
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Pantalla_Seleccion");
         }
     }
 }

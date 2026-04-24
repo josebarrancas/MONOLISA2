@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_MochilaCocas
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Mochila de Cocas
-  explicacion: 
+  explicacion: 'cae suavemente '
   icono: {fileID: 497262521754365963, guid: b24c6e557bf863249bd2cac6a53a83b7, type: 3}
   etiquetas:
   - Vertical

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_CuboRepulsor
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Cubo Repulsor
-  explicacion: 
+  explicacion: "Coloca un cubo que repele al jugador al tocarlo. \xDAtil para saltar"
   icono: {fileID: -8814609989390411121, guid: 916ee8db454f49447a632001debfeb38, type: 3}
   etiquetas:
   - Horizontal
