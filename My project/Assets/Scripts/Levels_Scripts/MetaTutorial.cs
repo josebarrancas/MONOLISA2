@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class MetaTutorial : MonoBehaviour
 {
     [Header("Referencias de Scripts")]
-    public Logic_Manager logicManager;
     public SorteoNiveles sorteador;
 
     [Header("Configuración de Partida")]
@@ -16,7 +15,6 @@ public class MetaTutorial : MonoBehaviour
         // Verificamos que sea el jugador
         if (other.CompareTag("Player"))
         {
-            // --- NUEVA CERRADURA DE COLECCIONABLES ---
             // Le preguntamos al script de monedas si el contador ya llegó al máximo
             if (MonedaColeccionable.TodasLasMonedasRecogidas())
             {
@@ -31,7 +29,15 @@ public class MetaTutorial : MonoBehaviour
 
     void EjecutarConfiguracionDePartida()
     {
-        List<string> top3 = logicManager.ObtenerMayoriaEtiquetas();
+        // --- LA CONEXIÓN MAESTRA ---
+        // Le hablamos directamente al Singleton global que sí tiene las cartas
+        if (Logic_Manager.instance == null)
+        {
+            Debug.LogError("Error: No existe el Logic_Manager.instance. ¿Empezó a jugar desde el Hub?");
+            return;
+        }
+
+        List<string> top3 = Logic_Manager.instance.ObtenerMayoriaEtiquetas();
 
         if (top3 != null && top3.Count > 0)
         {
@@ -39,12 +45,9 @@ public class MetaTutorial : MonoBehaviour
 
             if (rondaGanadora != null && rondaGanadora.Count > 0)
             {
-
                 if (LevelLoader.Instance != null)
                 {
                     LevelLoader.Instance.EstablecerRondaGanadora(rondaGanadora);
-
-
 
                     string escenaInicial = rondaGanadora[0].nombreEscena;
 
@@ -58,7 +61,7 @@ public class MetaTutorial : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("Error: No se encontró el LevelLoader en la escena del menú.");
+                    Debug.LogError("Error: No se encontró el LevelLoader en la escena.");
                 }
             }
             else
@@ -68,7 +71,7 @@ public class MetaTutorial : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No se pudieron obtener etiquetas del mazo.");
+            Debug.LogError("No se pudieron obtener etiquetas del mazo del Logic_Manager.instance.");
         }
     }
 }

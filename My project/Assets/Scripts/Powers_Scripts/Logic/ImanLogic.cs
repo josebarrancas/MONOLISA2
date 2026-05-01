@@ -5,8 +5,8 @@ public class ImanLogic : MonoBehaviour
 {
     private Vector2 direccion;
     private float velocidadVuelo = 15f;
-    [Tooltip("Velocidad a la que se arrastrará el bloque.")]
-    private float velocidadArraste = 8f;
+    [Tooltip("Velocidad a la que se arrastrará el bloque hacia el origen.")]
+    private float velocidadArraste = 12f;
     private float rangoMaximo = 6f;
     private Vector3 posicionInicial;
     private GameObject dueño;
@@ -36,7 +36,7 @@ public class ImanLogic : MonoBehaviour
             if (Vector3.Distance(posicionInicial, transform.position) >= rangoMaximo)
             {
                 dueño.GetComponent<ImanPower>().GastarCarga();
-                Destroy(gameObject); // Superó los 6 bloques sin tocar nada
+                Destroy(gameObject); // Superó el rango sin tocar nada
             }
         }
     }
@@ -47,53 +47,73 @@ public class ImanLogic : MonoBehaviour
 
         string etiqueta = collision.tag;
 
-        if (etiqueta == "estatico")
+        if (etiqueta == "estatico" || etiqueta == "Player" || etiqueta == "Dead")
         {
-            impactado = true;
-            Debug.Log("Imán tocó estático: Ignorado.");
-            Destroy(gameObject); // Se rompe sin gastar uso
-        }
-        else if (etiqueta == "enganche" || etiqueta == "desenganche" || etiqueta == "flotante")
-        {
-            impactado = true;
-            dueño.GetComponent<ImanPower>().GastarCarga(); // Cobra el uso
-
-            if (etiqueta == "enganche")
+            if (etiqueta == "estatico")
             {
-                collision.tag = "flotante";
-                Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-                if (rb != null) rb.bodyType = RigidbodyType2D.Kinematic;
+                impactado = true;
+                Debug.Log("Imán chocó contra pared estática: Se rompe.");
+                Destroy(gameObject);
             }
-
-            // Inicia el temporizador de 1 segundo
-            StartCoroutine(RutinaMoverPlataforma(collision.transform));
+            return;
         }
+
+        impactado = true;
+        dueño.GetComponent<ImanPower>().GastarCarga();
+
+        // 1. Lo convertimos en flotante (Etiqueta)
+        collision.tag = "flotante";
+
+        // 2. Le inyectamos el script Bloque_Flotante si no lo tiene
+        Bloque_Flotante scriptBloque = collision.gameObject.GetComponent<Bloque_Flotante>();
+        if (scriptBloque == null)
+        {
+            scriptBloque = collision.gameObject.AddComponent<Bloque_Flotante>();
+            Debug.Log("<color=green>Transformación: Se inyectó Bloque_Flotante al objeto.</color>");
+        }
+
+        // 3. Nos aseguramos de que tenga Rigidbody2D
+        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = collision.gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        // --- EL CAMBIO: FORZAR ESTADO DINÁMICO ---
+        rb.bodyType = RigidbodyType2D.Dynamic;
+
+        // Iniciamos el viaje de regreso enviándole el Rigidbody para usar físicas limpias
+        StartCoroutine(RutinaMoverPlataforma(collision.transform, rb));
     }
 
-    private IEnumerator RutinaMoverPlataforma(Transform plataforma)
+    private IEnumerator RutinaMoverPlataforma(Transform plataforma, Rigidbody2D rbPlataforma)
     {
-        float tiempo = 0f;
+        Vector3 destinoFinal = posicionInicial;
+        float distanciaMinimaLlegada = 0.5f;
 
-        // Calculamos la dirección para ATRAERLO hacia el jugador.
-        // Si literalmente quería EMPUJARLO lejos en la misma dirección del disparo, 
-        // cambie esto a: Vector3 dirMovimiento = direccion;
-        Vector3 dirMovimiento = (dueño.transform.position - plataforma.position).normalized;
-
-        while (tiempo < 1f) // Bucle estricto de 1 segundo
+        while (plataforma != null && Vector3.Distance(plataforma.position, destinoFinal) > distanciaMinimaLlegada)
         {
-            if (plataforma != null)
+            // Calculamos el nuevo paso usando fixedDeltaTime porque alteraremos físicas
+            Vector3 nuevaPosicion = Vector3.MoveTowards(plataforma.position, destinoFinal, velocidadArraste * Time.fixedDeltaTime);
+
+            // Movemos el objeto usando el motor de físicas de Unity para que no ignore paredes
+            if (rbPlataforma != null)
             {
-                // Movemos la plataforma
-                plataforma.Translate(dirMovimiento * velocidadArraste * Time.deltaTime, Space.World);
-                // Pegamos el imán a la plataforma para que la soga la siga visualmente
-                transform.position = plataforma.position;
+                rbPlataforma.MovePosition(nuevaPosicion);
             }
 
-            tiempo += Time.deltaTime;
-            yield return null; // Espera al siguiente frame
+            // Pegamos el imán al bloque
+            transform.position = plataforma.position;
+
+            // IMPORTANTE: Al usar MovePosition, debemos esperar al FixedUpdate, no al Update normal
+            yield return new WaitForFixedUpdate();
         }
 
-        // Se cumplió 1 segundo exacto: se destruye el imán y se corta la soga
+        if (rbPlataforma != null)
+        {
+            rbPlataforma.linearVelocity = Vector2.zero; // Frenado total en seco
+        }
+
         Destroy(gameObject);
     }
 }

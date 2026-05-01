@@ -119,7 +119,7 @@ public class ReRollManager : MonoBehaviour
             // 4. Asignación automática de la imagen (Sprite)
             if (imagenesPoderesUI[i] != null && Logic_Manager.instance != null && Logic_Manager.instance.mazoJugador != null)
             {
-                // Buscamos el objeto original en el Logic_Manager
+                
                 PoderData original = Logic_Manager.instance.mazoJugador.FirstOrDefault(p => p.nombre == nombreActual);
 
                 if (original != null && original.icono != null)

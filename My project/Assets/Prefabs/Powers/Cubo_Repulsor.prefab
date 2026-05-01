@@ -179,4 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef1ca17c25d6524e88fb7514c9e8a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuboRepulsorLogic
-  fuerzaRepulsion: 15
+  fuerzaRepulsion: 43
+  empujeExtraArriba: 0.1

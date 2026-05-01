@@ -16,7 +16,6 @@ public class MonedaColeccionable : MonoBehaviour
 
     void Awake()
     {
-        // Borramos la memoria si acabamos de cargar una escena nueva
         if (Time.frameCount != ultimoFrameDeReinicio)
         {
             monedasTotalesNivel = 0;
@@ -33,20 +32,38 @@ public class MonedaColeccionable : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // REGLA: Toque directo del jugador
+        // REGLA 1: Toque directo del jugador
         if (collision.gameObject.CompareTag("Player") && !recolectada)
         {
             TomarMoneda();
+        }
+        // REGLA 2: Cae en una zona de muerte (si la zona es un colisionador sólido)
+        else if (collision.gameObject.CompareTag("Dead"))
+        {
+            Debug.Log("<color=orange>Moneda tocó el vacío (Collision).</color> Destruyendo para evitar bloqueo.");
+            Destroy(gameObject);
+        }
+    }
+
+    // --- NUEVO: Detección para barreras invisibles (Triggers) ---
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // REGLA 3: Cae en una zona de muerte (si la barrera es un Trigger)
+        if (collision.CompareTag("Dead"))
+        {
+            Debug.Log("<color=orange>Moneda tocó el vacío (Trigger).</color> Destruyendo para evitar bloqueo.");
+            Destroy(gameObject); // Esto invocará tu OnDestroy automáticamente
         }
     }
 
     // --- REGLA DE SINGULARIDAD E INACCESIBILIDAD ---
     private void OnDestroy()
     {
+        // Esta genialidad de código que usted escribió se encargará de sumarla
         if (!recolectada && !seEstaCerrandoEscena && Application.isPlaying)
         {
             monedasRecogidasNivel++;
-            Debug.Log($"Moneda eliminada/procesada. Progreso: {monedasRecogidasNivel}/{monedasTotalesNivel}");
+            Debug.Log($"Moneda eliminada/procesada por el vacío o singularidad. Progreso: {monedasRecogidasNivel}/{monedasTotalesNivel}");
         }
     }
 

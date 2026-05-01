@@ -3,16 +3,21 @@ using UnityEngine;
 public class CuboRepulsorLogic : MonoBehaviour
 {
     [Header("Configuración de Repulsión")]
-    public float fuerzaRepulsion = 15f;
+    public float fuerzaRepulsion = 25f;
+    public float empujeExtraArriba = 1.0f;
 
     private Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        // Aseguramos que el cubo sea sólido y caiga por gravedad
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        // --- EL TRUCO DE LA INAMOVILIDAD ---
+        // Congelamos la Rotación (para que no ruede) Y congelamos la Posición X 
+        // (para que no pueda ser empujado hacia los lados). 
+        // El eje Y queda libre, así que la gravedad lo hará caer si no hay piso.
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -23,14 +28,17 @@ public class CuboRepulsorLogic : MonoBehaviour
             Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (playerRb != null)
             {
-                // Calculamos la dirección desde el centro del cubo hacia el jugador
-                Vector2 direccion = (collision.transform.position - transform.position).normalized;
+                // Calculamos la dirección dinámica
+                Vector2 direccion = (collision.transform.position - transform.position);
 
-                // Aplicamos la fuerza de repulsión al jugador
-                playerRb.linearVelocity = Vector2.zero; // Frenamos velocidad previa para que el impulso sea limpio
-                playerRb.AddForce(direccion * fuerzaRepulsion, ForceMode2D.Impulse);
+                // Le inyectamos altura artificial
+                direccion.y += empujeExtraArriba;
+                direccion = direccion.normalized;
 
-                Debug.Log("¡Cubo Repulsor activado!");
+                // Aplicamos la velocidad para el rebote perfecto
+                playerRb.linearVelocity = direccion * fuerzaRepulsion;
+
+                Debug.Log($"¡Cubo Repulsor activado! Dirección ajustada: {direccion}");
             }
         }
     }
