@@ -5,6 +5,9 @@ public class Controlador_Poderes_Principal : MonoBehaviour
     private PowerSelectorPrincipal miHUD;
     [HideInInspector] public bool bloqueadoPorDesplazador = false;
 
+    [Header("Barra de Combustible (Seguimiento)")]
+    public BarraSeguimiento barraSeguimiento; // Arrastra aquí el objeto con el script BarraSeguimiento
+
     void Start()
     {
         miHUD = FindObjectOfType<PowerSelectorPrincipal>();
@@ -32,12 +35,9 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         string rawNombre = miHUD.ObtenerNombrePoderActual();
         if (string.IsNullOrEmpty(rawNombre)) return;
 
-        // Blindaje contra errores de escritura
         string nombre = rawNombre.Trim().ToLower();
 
-        // -- PODERES DE TOQUE --
-
-        // EMBESTIFRESA
+        // -- PODERES DE TOQUE (DASH, PLATAFORMAS, ETC) --
         if (nombre == "embestifresa")
         {
             if (bloqueadoPorDesplazador) return;
@@ -53,7 +53,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // PLATAFORMA ESTÁTICA
         else if (nombre == "plataforma estatica" || nombre == "plataforma estática")
         {
             PlataformaEstaticaPower script = GetComponent<PlataformaEstaticaPower>();
@@ -63,7 +62,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // COCA AGITADA
         else if (nombre == "coca agitada")
         {
             if (bloqueadoPorDesplazador) return;
@@ -74,7 +72,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // RESETEO LOCAL
         else if (nombre == "reseteo local")
         {
             ReseteoLocalPower script = GetComponent<ReseteoLocalPower>();
@@ -84,7 +81,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // BRÚJULA GRAVITACIONAL
         else if (nombre == "brujula gravitacional" || nombre == "brújula gravitacional")
         {
             BrujulaGravitacionalPower script = GetComponent<BrujulaGravitacionalPower>();
@@ -94,7 +90,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // CUBO REPULSOR
         else if (nombre == "cubo repulsor")
         {
             CuboRepulsorPower script = GetComponent<CuboRepulsorPower>();
@@ -104,7 +99,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // GEL ADHERENTE
         else if (nombre == "gel adherente")
         {
             GelAdherentePower script = GetComponent<GelAdherentePower>();
@@ -114,7 +108,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // PASO SOMBRA
         else if (nombre == "paso sombra")
         {
             PasoSombraPower script = GetComponent<PasoSombraPower>();
@@ -123,7 +116,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 if (script.EjecutarPasoSombra()) RegistrarEventoPoder(rawNombre);
             }
         }
-        // SINGULARIDAD
         else if (nombre == "singularidad")
         {
             SingularidadPower script = GetComponent<SingularidadPower>();
@@ -133,7 +125,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // ERROR DE CODIGO
         else if (nombre == "error de codigo" || nombre == "error de código")
         {
             ErrorDeCodigoPower script = GetComponent<ErrorDeCodigoPower>();
@@ -143,13 +134,12 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
-        // IMÁN / DESPLAZADOR
         else if (nombre == "iman" || nombre == "imán" || nombre == "desplazador")
         {
             if (nombre.Contains("desplazador"))
             {
                 GetComponent<DesplazadorPower>()?.EjecutarPoder();
-                RegistrarEventoPoder(rawNombre); 
+                RegistrarEventoPoder(rawNombre);
             }
             if (nombre.Contains("iman"))
             {
@@ -173,6 +163,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         if (string.IsNullOrEmpty(rawNombre)) return;
 
         string nombre = rawNombre.Trim().ToLower();
+        bool mostrarBarra = false;
 
         // G-INVERSOR
         GInversorPower scriptGravedad = GetComponent<GInversorPower>();
@@ -180,6 +171,13 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         {
             bool quiereInvertir = (nombre == "g-inversor") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptGravedad.ProcesarInversion(quiereInvertir);
+
+            if (nombre == "g-inversor" && barraSeguimiento != null)
+            {
+                // Conectado a nivelMedidor y medidorMaximo de GInversorPower
+                barraSeguimiento.ActualizarEstado(scriptGravedad.nivelMedidor, scriptGravedad.medidorMaximo, true);
+                mostrarBarra = true;
+            }
         }
 
         // MOCHILA DE COCAS
@@ -188,12 +186,26 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         {
             bool usandoMochila = (nombre == "mochila de cocas") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptMochila.ProcesarVuelo(usandoMochila);
+
+            if (nombre == "mochila de cocas" && barraSeguimiento != null)
+            {
+                // Conectado a nivelMedidor y medidorMaximo de MochilaCocasPower
+                barraSeguimiento.ActualizarEstado(scriptMochila.nivelMedidor, scriptMochila.medidorMaximo, true);
+                mostrarBarra = true;
+            }
         }
 
+        // SINGULARIDAD
         SingularidadPower scriptSingularidad = GetComponent<SingularidadPower>();
         if (scriptSingularidad != null)
         {
             scriptSingularidad.estaSeleccionado = (nombre == "singularidad");
+        }
+
+        // Si el poder actual no es uno de los continuos o no hay HUD, ocultamos la barra
+        if (!mostrarBarra && barraSeguimiento != null)
+        {
+            barraSeguimiento.ActualizarEstado(0, 0, false);
         }
     }
 }

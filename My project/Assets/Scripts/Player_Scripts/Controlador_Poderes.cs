@@ -5,6 +5,9 @@ public class Controlador_Poderes : MonoBehaviour
     private PowerSelector selectorUI;
     public bool bloqueadoPorDesplazador = false;
 
+    [Header("Barra de Combustible (Seguimiento)")]
+    public BarraSeguimiento barraSeguimiento; // Arrastra la barra aquí en el Inspector
+
     void Start()
     {
         selectorUI = FindObjectOfType<PowerSelector>();
@@ -45,8 +48,6 @@ public class Controlador_Poderes : MonoBehaviour
 
                 Vector2 direccionDash = new Vector2(inputX, inputY).normalized;
                 scriptImpulso.EjecutarImpulso(direccionDash);
-
-                // Registro para Skill y UI
                 RegistrarEventoPoder(nombrePoder);
             }
         }
@@ -123,7 +124,6 @@ public class Controlador_Poderes : MonoBehaviour
         // -- DESPLAZADOR, IMÁN, SINGULARIDAD --
         else if (nombrePoder == "Desplazador" || nombrePoder == "Iman" || nombrePoder == "Singularidad")
         {
-            // Lógica simplificada para estos poderes
             if (nombrePoder == "Desplazador") GetComponent<DesplazadorPower>()?.EjecutarPoder();
             if (nombrePoder == "Iman") GetComponent<ImanPower>()?.EjecutarIman();
             if (nombrePoder == "Singularidad") GetComponent<SingularidadPower>()?.EjecutarSingularidad();
@@ -142,7 +142,6 @@ public class Controlador_Poderes : MonoBehaviour
         }
     }
 
-    // Función auxiliar para no repetir código
     private void RegistrarEventoPoder(string nombre)
     {
         selectorUI.RegistrarUsoDePoder();
@@ -156,6 +155,7 @@ public class Controlador_Poderes : MonoBehaviour
     {
         if (selectorUI == null) return;
         string nombrePoder = selectorUI.ObtenerNombrePoderActual();
+        bool mostrarBarra = false;
 
         // G-INVERSOR
         GInversorPower scriptGravedad = GetComponent<GInversorPower>();
@@ -163,8 +163,12 @@ public class Controlador_Poderes : MonoBehaviour
         {
             bool quiereInvertir = (nombrePoder == "G-Inversor") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptGravedad.ProcesarInversion(quiereInvertir);
-            // Nota: Los continuos suelen registrarse diferente, pero para el Skill 
-            // podrías registrarlo solo cuando Input.GetKeyDown(KeyCode.X)
+
+            if (nombrePoder == "G-Inversor" && barraSeguimiento != null)
+            {
+                barraSeguimiento.ActualizarEstado(scriptGravedad.nivelMedidor, scriptGravedad.medidorMaximo, true);
+                mostrarBarra = true;
+            }
         }
 
         // MOCHILA DE COCAS
@@ -173,6 +177,18 @@ public class Controlador_Poderes : MonoBehaviour
         {
             bool usandoMochila = (nombrePoder == "Mochila de Cocas") && Input.GetKey(KeyCode.X) && !bloqueadoPorDesplazador;
             scriptMochila.ProcesarVuelo(usandoMochila);
+
+            if (nombrePoder == "Mochila de Cocas" && barraSeguimiento != null)
+            {
+                barraSeguimiento.ActualizarEstado(scriptMochila.nivelMedidor, scriptMochila.medidorMaximo, true);
+                mostrarBarra = true;
+            }
+        }
+
+        // Apagar la barra si no se está usando un poder continuo
+        if (!mostrarBarra && barraSeguimiento != null)
+        {
+            barraSeguimiento.ActualizarEstado(0, 0, false);
         }
     }
 }

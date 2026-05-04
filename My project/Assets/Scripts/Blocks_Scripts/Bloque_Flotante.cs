@@ -23,7 +23,7 @@ public class Bloque_Flotante : MonoBehaviour
         //rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        rb.mass = 8f;
+        rb.mass = 10f;
         rb.linearDamping = 0.05f;
     }
 

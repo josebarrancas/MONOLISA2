@@ -18,5 +18,5 @@ MonoBehaviour:
   etiquetas:
   - Horizontal
   tipo: 0
-  cantidadUsos: 1
+  cantidadUsos: 10
   cargaMedidor: 0

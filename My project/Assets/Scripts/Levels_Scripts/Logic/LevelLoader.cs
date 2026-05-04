@@ -77,5 +77,6 @@ public class LevelLoader : MonoBehaviour
             // --- CAMBIE ESTE TEXTO POR EL NOMBRE EXACTO DE SU ESCENA DEL HUB ---
             UnityEngine.SceneManagement.SceneManager.LoadScene("Hub_Principal");
         }
+        
     }
 }

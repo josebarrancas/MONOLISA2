@@ -19,5 +19,5 @@ MonoBehaviour:
   - Salto
   - Volar
   tipo: 1
-  cantidadUsos: 5
+  cantidadUsos: 10
   cargaMedidor: 0

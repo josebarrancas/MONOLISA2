@@ -19,5 +19,5 @@ MonoBehaviour:
   - Horizontal
   - Crear_Obstaculos
   tipo: 1
-  cantidadUsos: 2
+  cantidadUsos: 10
   cargaMedidor: 0
