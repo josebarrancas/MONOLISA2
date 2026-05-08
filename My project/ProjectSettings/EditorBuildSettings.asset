@@ -27,6 +27,48 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_4_Based.unity
     guid: 7e480cfe5277f0144ba3725d6033cf39
   - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_5_Based.unity
+    guid: 6197f1e020ae37d45ac5719f292949db
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_6_Based.unity
+    guid: 6112721bc1906b346886313760632a48
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_7_Based.unity
+    guid: 91ff2b0ccbdd15544abd15bbba7e6a46
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_8_Based.unity
+    guid: 050b7c1cb64154b41ac407a7507f2c36
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_9_Based.unity
+    guid: 4e3869c8343a42445932ffbe7a892633
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_10_Based.unity
+    guid: 7eeaa046f8844ef40b5df8ea9a11049c
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Based/Lvl_11_Based.unity
+    guid: e21358942ca5f2e409f52358600825d1
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_16_Based.unity
+    guid: 5d821ad49ff263745ae9b9301321c1bc
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_17_Based.unity
+    guid: fb83b89ff4dbd6b4c8b9d65503c660c1
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_18_Based.unity
+    guid: fbc721cd9ffa51f45a9977788de739ba
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_19_Based.unity
+    guid: be64f2535fe1fa04db0f37d0e34578e8
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_20_Based.unity
+    guid: 3fa0b00ba6bf72d4ab4dbdf8f968362c
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_21_Based.unity
+    guid: e28e831ac1b9553418824e1aba96346b
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Based/Lvl_22_Based.unity
+    guid: 84ee082db20902a4fad067f0051e0a27
+  - enabled: 1
     path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_1_Issue.unity
     guid: e69a703cd686e3f44b41e0ff4414a323
   - enabled: 1
@@ -39,6 +81,45 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_4_Issue.unity
     guid: 1bfad0a5fa9fb144bb5d121d3820b327
   - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_5_Issue.unity
+    guid: 511bb2a86b433c94ab5abf88ea7fba86
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_6_Issue.unity
+    guid: 729e56181637921498723ee0e4b82999
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_7_Issue.unity
+    guid: 81150e4f488d7d54a81f088dd4603f5d
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_8_Issue.unity
+    guid: 7213286b0e07dc249b22ae9068428be0
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_9_Issue.unity
+    guid: 1151b7cbd1fd5e9409e2da026134b120
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_10_Issue.unity
+    guid: 0cd90268f0864be4aa9cc21abf6d671b
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Issue/Lvl_11_Issue.unity
+    guid: 1cf83c75caa46de4989c58f5a6a89a1f
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_16_Issue.unity
+    guid: e4bf4bf52f956be44bce5a66d61c5125
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_17_Issue.unity
+    guid: 444920ce42881c74aa08004b50aa809b
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_18_Issue.unity
+    guid: 59354a7da83bcb44c9c82948a03494d4
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_19_Issue.unity
+    guid: dff50180973817d448ee4c8486716b72
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_20_Issue.unity
+    guid: cba2d937d23a31c4eb95a3ad82369112
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Issue/Lvl_21_Issue.unity
+    guid: e255f80844749394692d769f23ace4d9
+  - enabled: 1
     path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_1_Soluction.unity
     guid: f19803b9c9eb26d4cb990137365d02d9
   - enabled: 1
@@ -50,6 +131,45 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_4_Soluction.unity
     guid: c7be6d478930d7c41a082e063b360d57
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_5_Soluction.unity
+    guid: e4c1e82c80c3491478e75e514a9ad99e
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_6_Soluction.unity
+    guid: a902e43dfb9f457489fa14fd3946894e
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_7_Soluction.unity
+    guid: dc0627772224c694b97d7eaffdc8fb8b
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_8_Soluction.unity
+    guid: acd2af0a45df53b43a2d3275fddc2100
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_9_Soluction.unity
+    guid: 9b1e4ad355c664b4fb26107fd40f6720
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_10_Soluction.unity
+    guid: 4e27f51f9023e0e4f8308193f39e10d1
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_1_3/Soluction/Lvl_11_Soluction.unity
+    guid: 098dc3b296a6d7546b3671901284ffa9
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_16_Soluction.unity
+    guid: 239646431bcf87544bfaab35317b1e89
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_17_Soluction.unity
+    guid: 16a050e3659cf1a4ca2efb9bd9b4c7ce
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_18_Soluction.unity
+    guid: f9acbda6fb950b54b949d0af7166f2e9
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_19_Soluction.unity
+    guid: 5ae5286ffea6e6541a79a6508aaac1fa
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_20_Soluction.unity
+    guid: 2235d43d34daade43b9d7cbbd9ac9169
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_21_Soluction.unity
+    guid: 26ec0305624c6f7439eb5ce05d662743
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
