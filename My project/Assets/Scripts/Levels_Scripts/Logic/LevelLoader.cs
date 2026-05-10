@@ -45,38 +45,45 @@ public class LevelLoader : MonoBehaviour
         // 1. Blindaje contra listas vacías
         if (nivelesDeEstaPartida == null || nivelesDeEstaPartida.Count == 0)
         {
-            Debug.LogError("Error Crítico: El LevelLoader no tiene niveles registrados.");
+            Debug.LogError("<color=red>Error Crítico:</color> El LevelLoader no tiene niveles registrados.");
             return;
         }
 
-        // 2. ¿Aún hay niveles en la lista por jugar?
-        if (nivelActualIndice < nivelesDeEstaPartida.Count)
+        // 2. ¿Aún hay niveles en la lista por jugar? (Doble verificación de seguridad)
+        if (nivelActualIndice >= 0 && nivelActualIndice < nivelesDeEstaPartida.Count)
         {
             // Extraemos el nombre base del nivel
-            string nombreBase = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
+            LevelData datosNivel = nivelesDeEstaPartida[nivelActualIndice];
 
-            // Guardamos el siguiente destino en la memoria
-            proximaEscenaCargar = nombreBase.Replace("Based", dificultad);
+            if (datosNivel != null)
+            {
+                string nombreBase = datosNivel.nombreEscena;
 
-            // Aumentamos el contador para la próxima puerta
-            nivelActualIndice++;
+                // Guardamos el siguiente destino en la memoria
+                proximaEscenaCargar = nombreBase.Replace("Based", dificultad);
 
-            // Hacemos la parada técnica en la pantalla de Re-roll
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Pantalla_Seleccion");
+                // Aumentamos el contador para la próxima puerta
+                nivelActualIndice++;
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Pantalla_Seleccion");
+            }
+            else
+            {
+                Debug.LogError($"<color=red>Error:</color> El nivel en el índice {nivelActualIndice} es nulo.");
+            }
         }
         else
         {
-            // 3. ¡EL JUGADOR SOBREVIVIÓ A TODOS LOS NIVELES!
-            Debug.Log("<color=yellow>¡PARTIDA COMPLETADA!</color> Regresando al Hub...");
+            // ¡Aquí llega cuando se acaban los niveles aleatorios!
+            Debug.Log("<color=yellow>¡PARTIDA COMPLETADA!</color>");
 
-            // Limpiamos la memoria para que la próxima partida empiece fresca
             nivelActualIndice = 0;
             nivelesDeEstaPartida.Clear();
             poderesDeLaPartida.Clear();
 
-            // --- CAMBIE ESTE TEXTO POR EL NOMBRE EXACTO DE SU ESCENA DEL HUB ---
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Hub_Principal");
+            // CAMBIA "Hub_Principal" por el nombre de tu escena de menú real
+            // Ejemplo: "Menu_Inicio" o "Main_Menu"
+            UnityEngine.SceneManagement.SceneManager.LoadScene("PON_AQUI_EL_NOMBRE_DE_TU_MENU");
         }
-        
     }
 }
