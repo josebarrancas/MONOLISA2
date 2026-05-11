@@ -4,6 +4,7 @@ public class ImanPower : MonoBehaviour
 {
     public GameObject prefabIman;
     public int cargasRestantes = 3;
+    public bool esUnico = false;
 
     public void EjecutarIman()
     {

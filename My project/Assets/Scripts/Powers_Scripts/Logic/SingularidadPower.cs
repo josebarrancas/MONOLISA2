@@ -5,6 +5,7 @@ public class SingularidadPower : MonoBehaviour
 {
     [Header("Configuración del Poder")]
     public int cargasRestantes = 3;
+    public bool esUnico = false;
     [Tooltip("Qué tan lejos del jugador aparece la X.")]
     public float distanciaMira = 2f;
     [Tooltip("El ancho y alto del área de borrado.")]

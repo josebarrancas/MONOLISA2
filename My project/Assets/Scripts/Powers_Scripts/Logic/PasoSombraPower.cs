@@ -6,6 +6,7 @@ public class PasoSombraPower : MonoBehaviour
     [Tooltip("El Prefab visual de la sombra que se quedará en el mapa.")]
     public GameObject prefabSombra;
     public int cargasRestantes = 1;
+    public bool esUnico = false;
 
     private GameObject sombraActiva;
     private bool sombraColocada = false;

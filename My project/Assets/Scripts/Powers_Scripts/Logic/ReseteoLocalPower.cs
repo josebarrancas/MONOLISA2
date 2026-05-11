@@ -5,6 +5,7 @@ public class ReseteoLocalPower : MonoBehaviour
 {
     [Header("Configuración")]
     public int cargasRestantes = 1;
+    public bool esUnico = false;
 
     // --- VARIABLES ESTÁTICAS (Sobreviven a la recarga de escena) ---
     public static bool vieneDeReseteoLocal = false;

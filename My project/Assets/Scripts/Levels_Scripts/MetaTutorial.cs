@@ -1,77 +1,42 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Encargado de detectar el fin del tutorial y disparar el inicio 
+/// de la primera ronda real (Fase 1).
+/// </summary>
 public class MetaTutorial : MonoBehaviour
 {
-    [Header("Referencias de Scripts")]
-    public SorteoNiveles sorteador;
-
-    [Header("Configuración de Partida")]
-    public int nivelesPorPartida = 3;
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verificamos que sea el jugador
         if (other.CompareTag("Player"))
         {
-            // Le preguntamos al script de monedas si el contador ya llegó al máximo
+            // Solo avanzamos si el jugador recogió la moneda/dato del tutorial
             if (MonedaColeccionable.TodasLasMonedasRecogidas())
             {
                 EjecutarConfiguracionDePartida();
             }
             else
             {
-                Debug.LogWarning("<color=orange>BLOQUEO TUTORIAL:</color> Aún no has recogido el dato (moneda) de esta zona.");
+                Debug.LogWarning("<color=orange>BLOQUEO TUTORIAL:</color> Aún no has recogido el dato de esta zona.");
             }
         }
     }
 
     void EjecutarConfiguracionDePartida()
     {
-        // --- LA CONEXIÓN MAESTRA ---
-        // Le hablamos directamente al Singleton global que sí tiene las cartas
-        if (Logic_Manager.instance == null)
+        if (LevelLoader.Instance != null)
         {
-            Debug.LogError("Error: No existe el Logic_Manager.instance. ¿Empezó a jugar desde el Hub?");
-            return;
-        }
+            Debug.Log("<color=cyan>MetaTutorial:</color> Tutorial completado.");
 
-        List<string> top3 = Logic_Manager.instance.ObtenerMayoriaEtiquetas();
+            LevelLoader.Instance.nivelGlobal = 0;
+            LevelLoader.Instance.nivelActualIndice = 0;
 
-        if (top3 != null && top3.Count > 0)
-        {
-            List<LevelData> rondaGanadora = sorteador.mejorRondaNiveles(top3, nivelesPorPartida);
-
-            if (rondaGanadora != null && rondaGanadora.Count > 0)
-            {
-                if (LevelLoader.Instance != null)
-                {
-                    LevelLoader.Instance.EstablecerRondaGanadora(rondaGanadora);
-
-                    string escenaInicial = rondaGanadora[0].nombreEscena;
-
-                    Debug.Log($"<color=cyan>MetaTutorial:</color> Enviando {rondaGanadora.Count} niveles al LevelLoader.");
-
-                    // 1. Le "anotamos" al LevelLoader cuál es el nivel que sigue
-                    LevelLoader.Instance.proximaEscenaCargar = escenaInicial;
-
-                    // 2. Mandamos al jugador a la sala de espera (Pantalla de Selección)
-                    SceneManager.LoadScene("Pantalla_Seleccion");
-                }
-                else
-                {
-                    Debug.LogError("Error: No se encontró el LevelLoader en la escena.");
-                }
-            }
-            else
-            {
-                Debug.LogError("El sorteador no devolvió niveles.");
-            }
+            // Mandamos a cargar la Pantalla de Selección para el primer nivel real
+            LevelLoader.Instance.CargarSiguienteNivel("Based");
         }
         else
         {
-            Debug.LogError("No se pudieron obtener etiquetas del mazo del Logic_Manager.instance.");
+            Debug.LogError("Error: No se encontró el LevelLoader. ¿Empezó desde el Hub?");
         }
     }
 }

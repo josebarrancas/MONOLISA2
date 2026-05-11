@@ -4,6 +4,7 @@ public class ErrorDeCodigoPower : MonoBehaviour
 {
     [Header("Configuración")]
     public int cargasRestantes = 1;
+    public bool esUnico = false;
 
     public void EjecutarIntercambio()
     {

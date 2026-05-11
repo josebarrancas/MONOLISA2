@@ -6,6 +6,7 @@ public class PlataformaEstaticaPower : MonoBehaviour
     [Header("Configuración de la Plataforma")]
     [Tooltip("El prefab del bloque estático que servirá como plataforma.")]
     public GameObject plataformaPrefab;
+    public bool esUnico = false;
 
     [Tooltip("Tiempo en segundos antes de que desaparezca. Pon 0 si es infinita.")]
     public float tiempoDeVida = 0;

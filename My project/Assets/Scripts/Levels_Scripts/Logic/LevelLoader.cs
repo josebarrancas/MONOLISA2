@@ -1,15 +1,24 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
     public static LevelLoader Instance;
     public string proximaEscenaCargar;
-    [Header("Memoria de la Partida")]
-    public List<PoderData> poderesDeLaPartida = new List<PoderData>();
 
-    // Inicializamos la lista de una vez para que nunca sea null, solo vacía
-    private List<LevelData> nivelesDeEstaPartida = new List<LevelData>();
+    [Header("Progreso de la Partida")]
+    public int nivelGlobal = 1; // Empezamos en 0(El Tutorial)
+
+    [Header("Bolsas de Niveles (Fases)")]
+    public List<LevelData> nivelesFase1;
+    public List<LevelData> nivelesFase2;
+    public List<LevelData> nivelesFase3;
+    public List<LevelData> nivelesFase4;
+
+    [Header("Memoria de la Partida Actual")]
+    public List<LevelData> nivelesDeEstaPartida = new List<LevelData>();
     public int nivelActualIndice = 0;
 
     void Awake()
@@ -17,73 +26,96 @@ public class LevelLoader : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("<color=green>LevelLoader:</color> Instancia principal creada y protegida.");
         }
-        else
-        {
-            Debug.Log("<color=yellow>LevelLoader:</color> Se detectó un duplicado en la escena, destruyéndolo...");
-            Destroy(gameObject);
-        }
-    }
-
-    public void EstablecerRondaGanadora(List<LevelData> rondaElegida)
-    {
-        if (rondaElegida == null)
-        {
-            Debug.LogError("<color=red>LevelLoader:</color> ¡ERROR! Intentaron entregar una lista nula desde el Sorteo.");
-            return;
-        }
-
-        nivelesDeEstaPartida = rondaElegida;
-        nivelActualIndice = 0;
-        Debug.Log($"<color=cyan>LevelLoader:</color> Datos recibidos con éxito. Total de niveles cargados: {nivelesDeEstaPartida.Count}");
+        else Destroy(gameObject);
     }
 
     public void CargarSiguienteNivel(string dificultad)
     {
-        // 1. Blindaje contra listas vacías
-        if (nivelesDeEstaPartida == null || nivelesDeEstaPartida.Count == 0)
+        // Si no hay niveles o ya completamos la ronda de 3
+        if (nivelesDeEstaPartida == null || nivelActualIndice >= nivelesDeEstaPartida.Count)
         {
-            Debug.LogError("<color=red>Error Crítico:</color> El LevelLoader no tiene niveles registrados.");
-            return;
+            GenerarNuevaRonda();
         }
 
-        // 2. ¿Aún hay niveles en la lista por jugar? (Doble verificación de seguridad)
-        if (nivelActualIndice >= 0 && nivelActualIndice < nivelesDeEstaPartida.Count)
+        if (nivelesDeEstaPartida.Count > 0)
         {
-            // Extraemos el nombre base del nivel
-            LevelData datosNivel = nivelesDeEstaPartida[nivelActualIndice];
 
-            if (datosNivel != null)
+            string nombreBase = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
+            string dificultadMin = dificultad.ToLower();
+
+            string nombreLimpio = nombreBase;
+            if (nombreLimpio.Contains("based")) nombreLimpio = nombreLimpio.Replace("based", dificultadMin);
+            else if (nombreLimpio.Contains("Based")) nombreLimpio = nombreLimpio.Replace("Based", dificultadMin);
+
+            proximaEscenaCargar = nombreLimpio;
+
+            if (CondicionesManager.Instance != null && SkillManager.Instance != null)
             {
-                string nombreBase = datosNivel.nombreEscena;
-
-                // Guardamos el siguiente destino en la memoria
-                proximaEscenaCargar = nombreBase.Replace("Based", dificultad);
-
-                // Aumentamos el contador para la próxima puerta
-                nivelActualIndice++;
-
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Pantalla_Seleccion");
+                CondicionesManager.Instance.EvaluarCondicionesParaNivel(proximaEscenaCargar, SkillManager.Instance.skillActual);
             }
-            else
-            {
-                Debug.LogError($"<color=red>Error:</color> El nivel en el índice {nivelActualIndice} es nulo.");
-            }
+
+            SceneManager.LoadScene("Pantalla_Seleccion");
+        }
+    }
+
+    private void GenerarNuevaRonda()
+    {
+        List<LevelData> pool = new List<LevelData>();
+        int cantidad = 3;
+
+        if (nivelGlobal >= 8)
+        {
+            pool = nivelesFase4; cantidad = 1;
+        }
+        else if (nivelGlobal >= 6)
+        {
+            pool = nivelesFase3; cantidad = 2;
+        }
+        else if (nivelGlobal >= 3) // <--- Si el nivelGlobal es 3, ya es el cuarto nivel real
+        {
+            pool = nivelesFase2; cantidad = 3;
         }
         else
         {
-            // ¡Aquí llega cuando se acaban los niveles aleatorios!
-            Debug.Log("<color=yellow>¡PARTIDA COMPLETADA!</color>");
-
-            nivelActualIndice = 0;
-            nivelesDeEstaPartida.Clear();
-            poderesDeLaPartida.Clear();
-
-            // CAMBIA "Hub_Principal" por el nombre de tu escena de menú real
-            // Ejemplo: "Menu_Inicio" o "Main_Menu"
-            UnityEngine.SceneManagement.SceneManager.LoadScene("PON_AQUI_EL_NOMBRE_DE_TU_MENU");
+            pool = nivelesFase1; cantidad = 3;
         }
+
+        Debug.Log($"<color=yellow>GENERADOR:</color> Sorteando para Nivel {nivelGlobal}. Fase detectada por umbral.");
+
+        List<string> tags = new List<string>() { "General" };
+        if (Logic_Manager.instance != null) tags = Logic_Manager.instance.ObtenerMayoriaEtiquetas();
+
+        nivelesDeEstaPartida = mejorRondaNiveles(tags, cantidad, pool);
+        nivelActualIndice = 0;
+    }
+
+    private List<LevelData> mejorRondaNiveles(List<string> etiquetas, int cantidad, List<LevelData> pool)
+    {
+        int aTomar = Mathf.Min(cantidad, pool.Count);
+        List<List<LevelData>> simulaciones = new List<List<LevelData>>();
+        List<float> puntajes = new List<float>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            List<LevelData> ronda = pool.OrderBy(x => Random.value).Take(aTomar).ToList();
+            simulaciones.Add(ronda);
+
+            float score = 0;
+            foreach (var nivel in ronda)
+            {
+                int match = 0;
+                foreach (string tag in nivel.etiquetasNivel)
+                {
+                    if (LogicaPoderes.Relaciones.ContainsKey(tag))
+                        if (etiquetas.Any(e => LogicaPoderes.Relaciones[tag].Contains(e))) match++;
+                }
+                score += (nivel.etiquetasNivel.Length > 0) ? (float)match / nivel.etiquetasNivel.Length : 0;
+            }
+            puntajes.Add(score / aTomar);
+        }
+        return simulaciones[puntajes.IndexOf(puntajes.Max())];
     }
 }

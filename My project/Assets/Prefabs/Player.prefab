@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: 4069241558945384995}
   - component: {fileID: -7119622624057941546}
   - component: {fileID: 3003776807825933331}
+  - component: {fileID: -1648296092945758564}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -649,6 +650,7 @@ MonoBehaviour:
   tiempoLibreHorizontal: 0.2
   fuerzaGravedad: 3
   tiempoLibreVertical: 0.5
+  esUnico: 0
   estaEmbistiendo: 0
   cargasRestantes: 5
 --- !u!114 &8155954041371909080
@@ -664,6 +666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlataformaEstaticaPower
   plataformaPrefab: {fileID: 5523742962656968668, guid: faae3dc42285710439c09ae20333243a, type: 3}
+  esUnico: 0
   tiempoDeVida: 0
   offsetVertical: -2
   limiteMaximoEnPantalla: 3
@@ -681,6 +684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GInversorPower
   medidorMaximo: 100
+  esUnico: 0
   costoPorSegundo: 25
   nivelMedidor: 0
   estaInvertido: 0
@@ -697,6 +701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CocaAgitadaPower
   velocidadElevacion: 20
+  esUnico: 0
   tiempoElevacion: 0.5
   cargasRestantes: 3
   estaElevando: 0
@@ -713,6 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MochilaCocasPower
   medidorMaximo: 100
+  esUnico: 0
   costoPorSegundo: 35
   velocidadDescensoLento: 2
   nivelMedidor: 0
@@ -730,6 +736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReseteoLocalPower
   cargasRestantes: 1
+  esUnico: 0
 --- !u!114 &608322835041253787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,6 +752,7 @@ MonoBehaviour:
   prefabCubo: {fileID: 3534686128747612963, guid: 6d43bc374b23cb04ebd81c028ee158e0, type: 3}
   distanciaAparicion: 2
   cargasRestantes: 1
+  esUnico: 0
 --- !u!114 &4749765767927947665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -759,6 +767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GelAdherentePower
   prefabGel: {fileID: 7434369373269836157, guid: f729f6e006bea5e44924f71ca3f98cec, type: 3}
   cargasRestantes: 4
+  esUnico: 0
   distanciaAlcance: 6
   capaPared:
     serializedVersion: 2
@@ -777,6 +786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PasoSombraPower
   prefabSombra: {fileID: 6292346627587168281, guid: d62b88bbdc4b134418166c2b6833704f, type: 3}
   cargasRestantes: 1
+  esUnico: 0
 --- !u!114 &9222667888569791123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -791,6 +801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DesplazadorPower
   prefabAreaDesplazador: {fileID: 3861882415688710368, guid: 403daf8f96600404eaf79f06b8de02c3, type: 3}
   cargasRestantes: 1
+  esUnico: 0
 --- !u!114 &7003110258940388403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,6 +816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ImanPower
   prefabIman: {fileID: 8286400348327031583, guid: a31012583704a8849bf399c31242dfc4, type: 3}
   cargasRestantes: 3
+  esUnico: 0
 --- !u!114 &4583819007252286547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -820,6 +832,7 @@ MonoBehaviour:
   velocidadElevacion: 12
   cargasRestantes: 1
   flechaVisual: {fileID: 148075953193996301}
+  esUnico: 0
   distanciaFlecha: 4
   estaUsandoBrujula: 0
 --- !u!114 &4069241558945384995
@@ -835,6 +848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SingularidadPower
   cargasRestantes: 3
+  esUnico: 0
   distanciaMira: 4
   "tama\xF1oArea": {x: 3, y: 3}
   miraVisualX: {fileID: 2078766954067211257}
@@ -880,3 +894,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ErrorDeCodigoPower
   cargasRestantes: 1
+  esUnico: 0
+--- !u!114 &-1648296092945758564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4276265352606661548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf9eca303f8c4f74094efeec1a4db246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CentinelaDePoderes

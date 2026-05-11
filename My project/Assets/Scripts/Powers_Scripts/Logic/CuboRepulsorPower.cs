@@ -6,6 +6,7 @@ public class CuboRepulsorPower : MonoBehaviour
     public GameObject prefabCubo;
     public float distanciaAparicion = 2f;
     public int cargasRestantes = 1;
+    public bool esUnico = false;
 
     public void EjecutarPoder()
     {

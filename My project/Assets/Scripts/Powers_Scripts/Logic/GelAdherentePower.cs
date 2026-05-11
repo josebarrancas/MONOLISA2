@@ -5,6 +5,7 @@ public class GelAdherentePower : MonoBehaviour
     [Header("Configuración de la Pistola")]
     public GameObject prefabGel;
     public int cargasRestantes = 4;
+    public bool esUnico = false;
 
     [Tooltip("Qué tan lejos llega el disparo de pintura.")]
     public float distanciaAlcance = 6f;

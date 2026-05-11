@@ -9,6 +9,7 @@ public class EmbestifresaPower : MonoBehaviour
     public float tiempoLibreHorizontal = 0.2f;  // Duración del Dash
     public float fuerzaGravedad = 2f; // Fuerza de la gravedad para saltos verticales
     public float tiempoLibreVertical = 0.2f; // Duracion del Dash vertical
+    public bool esUnico = false;
 
     [HideInInspector]
     public bool estaEmbistiendo = false;

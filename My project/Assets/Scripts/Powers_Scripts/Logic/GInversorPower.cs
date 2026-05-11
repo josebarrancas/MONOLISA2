@@ -5,6 +5,7 @@ public class GInversorPower : MonoBehaviour
     [Header("Configuración del Medidor")]
     [Tooltip("Cantidad máxima de energía del medidor (Ej. 100).")]
     public float medidorMaximo = 100f;
+    public bool esUnico = false;
 
     [Tooltip("Cuánta energía se gasta por cada segundo de uso (Ej. 30 agota 100 en ~3.3 segundos).")]
     public float costoPorSegundo = 30f;

@@ -1,32 +1,25 @@
 using UnityEngine;
 
-/// <summary>
-/// Script encargado de detectar el fin del nivel y coordinar
-/// la carga de la siguiente escena inteligente.
-/// </summary>
 public class MetaNivel : MonoBehaviour
 {
-    [Header("Configuración del Nivel")]
-    [Tooltip("Indica si este es el nivel 1, 2 o 3 dentro de la fase actual.")]
-    public int numeroNivelActual;
+    private bool yaSeActivo = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !yaSeActivo)
         {
-            if (!MonedaColeccionable.TodasLasMonedasRecogidas())
-            {
-                Debug.LogWarning("BLOQUEADO: No has recolectado todos los archivos de datos (monedas).");
-                return;
-            }
+            if (!MonedaColeccionable.TodasLasMonedasRecogidas()) return;
 
-            Debug.Log("¡Meta alcanzada y requisitos cumplidos!");
+            yaSeActivo = true;
 
-            if (SkillManager.Instance != null && LevelLoader.Instance != null)
+            if (LevelLoader.Instance != null)
             {
-                SkillManager.Instance.CalcularResultados();
-                string dificultadDetectada = SkillManager.Instance.estadoActual;
-                LevelLoader.Instance.CargarSiguienteNivel(dificultadDetectada);
+                // AVANZAMOS EL PROGRESO AQUÍ
+                LevelLoader.Instance.nivelGlobal++;
+                LevelLoader.Instance.nivelActualIndice++;
+
+                string dif = SkillManager.Instance != null ? SkillManager.Instance.estadoActual : "Based";
+                LevelLoader.Instance.CargarSiguienteNivel(dif);
             }
         }
     }

@@ -7,6 +7,7 @@ public class BrujulaGravitacionalPower : MonoBehaviour
     public float velocidadElevacion = 12f;
     public int cargasRestantes = 1;
     public GameObject flechaVisual;
+    public bool esUnico = false;
     [Header("Configuración Visual")]
     public float distanciaFlecha = 1.5f; 
 

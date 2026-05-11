@@ -1,11 +1,9 @@
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 /// <summary>
-/// Encargado de inicializar los iconos de los niveles en el HUD y encargadi
-/// de mostrar los estados de los niveles.
+/// Encargado de inicializar los iconos de los niveles en el HUD y encargado
+/// de mostrar los estados de los niveles de forma acumulativa (Base 0: 0 al 8).
 /// </summary>
-
 public class GestorProgresoHUD : MonoBehaviour
 {
     [System.Serializable]
@@ -16,46 +14,51 @@ public class GestorProgresoHUD : MonoBehaviour
         public GameObject circuloAzul;
     }
 
-    [Header("Configuracion de Iconnos")]
+    [Header("Configuracion de Iconos")]
+    [Tooltip("Para MONOLISA2, esta lista debería tener 9 elementos.")]
     public IconosNivel[] niveles;
 
     void Start()
     {
-
-        Debug.Log("Se llamo al script");
         ActualizarIndicadores();
     }
 
     public void ActualizarIndicadores()
     {
-        if (LevelLoader.Instance == null) Debug.LogError("Error al cargar el 'LevelLoader");
+        if (LevelLoader.Instance == null)
+        {
+            Debug.LogError("Error: No se encontró el LevelLoader para actualizar el HUD.");
+            return;
+        }
 
-        int nivelActualIndex = LevelLoader.Instance.nivelActualIndice; // Obtenemos el nivel en el que se encuentra
+        // --- ACTUALIZACIÓN BASE 0 ---
+        // Ahora nivelGlobal coincide exactamente con el índice del array (0 a 8).
+        int indexActualHUD = LevelLoader.Instance.nivelGlobal;
 
-        // Ciclo para ir cargando los iconos en base a en que numero de nivel se encuentre
         for (int i = 0; i < niveles.Length; i++)
         {
-            if (i < nivelActualIndex) // Si el jugador ya lleva por lo menos algun nivel completado entonces se mostraran los iconos de nivel completado
+            // 1. Niveles ya superados
+            // Si el índice del icono es menor al nivel actual, es que ya se ganó.
+            if (i < indexActualHUD)
             {
                 niveles[i].palomitaVerde.SetActive(true);
                 niveles[i].palomitaGris.SetActive(false);
                 niveles[i].circuloAzul.SetActive(false);
             }
-            else if (i == nivelActualIndex) // esto servira para poder indicarle al jugador que se encuentra en tal numero de nivel
+            // 2. Nivel en el que se encuentra actualmente el jugador
+            else if (i == indexActualHUD)
             {
                 niveles[i].palomitaVerde.SetActive(false);
                 niveles[i].palomitaGris.SetActive(true);
                 niveles[i].circuloAzul.SetActive(true);
             }
-            else // Y con esto controlaremos los iconoes de los niveles que aun no completa el jugador
+            // 3. Niveles que aún no ha alcanzado
+            else
             {
                 niveles[i].palomitaVerde.SetActive(false);
                 niveles[i].palomitaGris.SetActive(true);
                 niveles[i].circuloAzul.SetActive(false);
             }
         }
-
     }
 }
-
-   

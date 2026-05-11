@@ -4,6 +4,7 @@ public class DesplazadorPower : MonoBehaviour
 {
     public GameObject prefabAreaDesplazador;
     public int cargasRestantes = 1;
+    public bool esUnico = false;
 
     public void EjecutarPoder()
     {

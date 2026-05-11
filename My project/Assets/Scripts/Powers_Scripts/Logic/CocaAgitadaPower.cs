@@ -6,6 +6,7 @@ public class CocaAgitadaPower : MonoBehaviour
     [Header("Configuración del Impulso")]
     [Tooltip("Velocidad a la que subirá el personaje (un valor bajo para que sea lento, ej: 4).")]
     public float velocidadElevacion = 4f;
+    public bool esUnico = false;
 
     [Tooltip("Cuánto tiempo durará el efecto de elevación en segundos.")]
     public float tiempoElevacion = 1.5f;

@@ -5,6 +5,7 @@ public class MochilaCocasPower : MonoBehaviour
     [Header("Configuración del Medidor")]
     [Tooltip("Cantidad máxima de gas en la mochila.")]
     public float medidorMaximo = 100f;
+    public bool esUnico = false;
 
     [Tooltip("Qué tan rápido se gastan las cocas por segundo.")]
     public float costoPorSegundo = 35f;
