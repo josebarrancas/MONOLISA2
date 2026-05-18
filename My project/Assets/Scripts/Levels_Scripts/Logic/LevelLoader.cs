@@ -42,7 +42,6 @@ public class LevelLoader : MonoBehaviour
 
         if (nivelesDeEstaPartida.Count > 0)
         {
-
             string nombreBase = nivelesDeEstaPartida[nivelActualIndice].nombreEscena;
             string dificultadMin = dificultad.ToLower();
 
@@ -56,6 +55,9 @@ public class LevelLoader : MonoBehaviour
             {
                 CondicionesManager.Instance.EvaluarCondicionesParaNivel(proximaEscenaCargar, SkillManager.Instance.skillActual);
             }
+
+            
+            nivelActualIndice++;
 
             SceneManager.LoadScene("Pantalla_Seleccion");
         }

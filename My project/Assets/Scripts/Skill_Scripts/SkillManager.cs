@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class SkillManager : MonoBehaviour
@@ -10,11 +11,15 @@ public class SkillManager : MonoBehaviour
     public string estadoActual = "Based";
 
     [Header("Métricas del Nivel (Debug)")]
-    public int intentosNivel = 1; // Movimiento.cs incrementa esto al morir
-    public float tiempoInicio;
-    public int poderesUtilizados;
+    public int intentosNivel = 1;
+    public float tiempoNivel = 0f; // NUEVO: Cronómetro propio
+    public int poderesUtilizados = 0;
 
-    // Diccionario de preferencias (Sigue funcionando igual)
+    private bool cronometroActivo = false;
+
+    [Header("Herramientas QA")]
+    public bool mostrarDebugUI = true;
+
     public Dictionary<string, int> historialPoderes = new Dictionary<string, int>();
 
     void Awake()
@@ -24,7 +29,6 @@ public class SkillManager : MonoBehaviour
             Instance = this;
             transform.parent = null;
             DontDestroyOnLoad(gameObject);
-            ReiniciarMetricas();
         }
         else
         {
@@ -32,71 +36,110 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    public void ReiniciarMetricas()
+    // --- EL SECRETO: ESCUCHAR LOS CAMBIOS DE ESCENA ---
+    void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+    void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        tiempoInicio = Time.time;
-        poderesUtilizados = 0;
-        // No reiniciamos intentosNivel aquí, eso se hace después de calcular resultados
+        // Si estamos en un menú, pausamos el tiempo
+        if (scene.name == "Pantalla_Seleccion" || scene.name == "Hub")
+        {
+            cronometroActivo = false;
+        }
+        else
+        {
+            // Si entramos a un nivel jugable, es un NUEVO intento.
+            // Limpiamos los poderes y el tiempo de este intento específico.
+            tiempoNivel = 0f;
+            poderesUtilizados = 0;
+            cronometroActivo = true;
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F3)) mostrarDebugUI = !mostrarDebugUI;
+
+        // El tiempo SOLO avanza si el cronómetro está activo
+        if (cronometroActivo)
+        {
+            tiempoNivel += Time.deltaTime;
+        }
     }
 
     public void RegistraUsoPoder(string nombrePoder)
     {
         poderesUtilizados++;
-
         if (historialPoderes.ContainsKey(nombrePoder))
             historialPoderes[nombrePoder]++;
         else
             historialPoderes.Add(nombrePoder, 1);
-
-        Debug.Log($"<color=green>SkillManager:</color> Poder '{nombrePoder}' registrado ({historialPoderes[nombrePoder]} usos).");
     }
 
     public void CalcularResultados()
     {
-        float tiempoFinal = Time.time - tiempoInicio;
+        // Ya no usamos Time.time, usamos nuestro cronómetro perfecto
+        float tiempoFinal = tiempoNivel;
 
-        // 1. PUNTOS POR INTENTOS (Dificultad)
         int pIntentos = 0;
-        if (intentosNivel == 1) pIntentos = 15; // Gran bonus por pasar a la primera
+        if (intentosNivel == 1) pIntentos = 15;
         else if (intentosNivel <= 3) pIntentos = 5;
         else if (intentosNivel <= 5) pIntentos = 0;
         else if (intentosNivel <= 8) pIntentos = -10;
         else pIntentos = -20;
 
-        // 2. PUNTOS POR TIEMPO (Fluidez)
         int pTiempo = 0;
         if (tiempoFinal < 45f) pTiempo = 10;
         else if (tiempoFinal <= 90f) pTiempo = 5;
         else if (tiempoFinal <= 180f) pTiempo = 0;
         else pTiempo = -10;
 
-        // 3. PUNTOS POR PODERES (Maestría)
         int pPoder = 0;
-        if (poderesUtilizados == 0) pPoder = 15; // Jugador rústico/habilidoso
+        if (poderesUtilizados == 0) pPoder = 15;
         else if (poderesUtilizados <= 3) pPoder = 5;
         else if (poderesUtilizados <= 6) pPoder = 0;
         else pPoder = -10;
 
-        // 4. NUEVA FÓRMULA DE SKILL (Ajuste por Desviación)
-        // La fórmula anterior (0.7 + 0.3) tendía a bajar el skill drásticamente.
-        // Ahora usamos un factor de cambio basado en el desempeño:
         float puntuacionNivel = pIntentos + pTiempo + pPoder;
-
-        // El skill sube o baja suavemente según la puntuación (máximo +/- 15 puntos por nivel)
         float factorCambio = puntuacionNivel * 0.4f;
         skillActual = Mathf.Clamp(skillActual + factorCambio, 0, 100);
 
-        // 5. DETERMINAR EL ESTADO
-        if (skillActual < 40) estadoActual = "Issue";      // El jugador está sufriendo (Ayudarle)
-        else if (skillActual > 70) estadoActual = "Solution"; // El jugador es un pro (Castigarle)
-        else estadoActual = "Based";                         // Flujo normal
+        if (skillActual < 40) estadoActual = "Issue";
+        else if (skillActual > 70) estadoActual = "Solution";
+        else estadoActual = "Based";
 
-        Debug.Log($"<color=cyan>--- SKILL REPORT ---</color>\n" +
-                  $"Puntos: Intentos({pIntentos}) Tiempo({pTiempo}) Poderes({pPoder})\n" +
-                  $"Variación: {factorCambio} | Nuevo Skill: {skillActual} | Estado: {estadoActual}");
-
-        // Limpieza para el siguiente nivel
+        // Al ganar, reiniciamos los intentos para prepararnos para el SIGUIENTE nivel
         intentosNivel = 1;
-        ReiniciarMetricas();
+    }
+
+    // --- UI DE DEBUG ---
+    void OnGUI()
+    {
+        if (!mostrarDebugUI) return;
+
+        int ancho = 380;
+        int alto = 200;
+        Rect rectPanel = new Rect(20, 20, ancho, alto);
+
+        GUIStyle estiloCaja = new GUIStyle(GUI.skin.box);
+        estiloCaja.fontSize = 18;
+        estiloCaja.fontStyle = FontStyle.Bold;
+        GUI.Box(rectPanel, "QA Debug - MONOLISA2 (F3 ocultar)", estiloCaja);
+
+        GUIStyle estiloTexto = new GUIStyle();
+        estiloTexto.normal.textColor = Color.white;
+        estiloTexto.fontSize = 22;
+        estiloTexto.richText = true;
+        estiloTexto.padding = new RectOffset(15, 15, 40, 15);
+
+        // Usamos tiempoNivel en lugar del cálculo antiguo
+        string info = $"\n" +
+                      $"Intento Actual: <b>{intentosNivel}</b>\n" +
+                      $"Tiempo: <b>{tiempoNivel:F1} seg</b>\n" +
+                      $"Poderes Usados: <b>{poderesUtilizados}</b>\n" +
+                      $"Skill Level: <b>{skillActual:F1}</b> <color=cyan>[{estadoActual}]</color>";
+
+        GUI.Label(rectPanel, info, estiloTexto);
     }
 }
