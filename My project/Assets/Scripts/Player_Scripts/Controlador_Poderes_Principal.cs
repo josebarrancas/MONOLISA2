@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // Necesario para extraer el Sprite del selector principal
 
 public class Controlador_Poderes_Principal : MonoBehaviour
 {
@@ -8,19 +9,44 @@ public class Controlador_Poderes_Principal : MonoBehaviour
     [Header("Barra de Combustible (Seguimiento)")]
     public BarraSeguimiento barraSeguimiento; // Arrastra aquí el objeto con el script BarraSeguimiento
 
+    // Variable para rastrear qué poder estaba equipado en el frame anterior
+    private string ultimoNombrePoder = "";
+
     void Start()
     {
         miHUD = FindObjectOfType<PowerSelectorPrincipal>();
 
         if (miHUD == null)
         {
-            Debug.LogError("¡ALERTA!: No se encontró PowerSelectorPrincipal en esta escena.");
+            Debug.LogWarning("Controlador_Poderes_Principal: No se encontró 'PowerSelectorPrincipal' en esta escena.");
         }
+        else
+        {
+            // Sincroniza automáticamente el icono y las cargas al arrancar el nivel
+            Invoke("SincronizarNuevaBarraAlInicio", 0.05f);
+        }
+    }
+
+    private void SincronizarNuevaBarraAlInicio()
+    {
+        ActualizarIconoYCargas();
     }
 
     void Update()
     {
-        if (Time.timeScale == 0 || miHUD == null) return;
+        if (Time.timeScale == 0) return;
+
+        // ==========================================================
+        // DETECCIÓN VISUAL: ¿El jugador cambió de poder en este frame?
+        // ==========================================================
+        if (miHUD != null)
+        {
+            string poderActual = miHUD.ObtenerNombrePoderActual();
+            if (poderActual != ultimoNombrePoder)
+            {
+                ActualizarIconoYCargas();
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -30,14 +56,42 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         ProcesarPoderesContinuos();
     }
 
+    /// <summary>
+    /// Sincroniza el Sprite del icono desde el PowerSelectorPrincipal y actualiza las cargas en el HUD.
+    /// </summary>
+    private void ActualizarIconoYCargas()
+    {
+        if (miHUD == null || HUDPoderesManager.Instance == null) return;
+
+        // Actualizamos el rastro del nombre original
+        ultimoNombrePoder = miHUD.ObtenerNombrePoderActual();
+
+        // Buscamos el componente Image dentro de la referencia 'iconoPoderActual' de tu script principal
+        if (miHUD.iconoPoderActual != null)
+        {
+            Image imgCirculo = miHUD.iconoPoderActual.GetComponent<Image>();
+
+            if (imgCirculo != null && imgCirculo.sprite != null)
+            {
+                // Enviamos el sprite al HUD de cargas fijas
+                HUDPoderesManager.Instance.CambiarIconoPoder(imgCirculo.sprite);
+            }
+        }
+
+        // Actualizar las cargas de inmediato
+        ActualizarHUDConCargasDelPoderActual();
+    }
+
     private void EjecutarPoderDeToque()
     {
+        if (miHUD == null) return;
+
         string rawNombre = miHUD.ObtenerNombrePoderActual();
         if (string.IsNullOrEmpty(rawNombre)) return;
 
         string nombre = rawNombre.Trim().ToLower();
 
-        // -- PODERES DE TOQUE (DASH, PLATAFORMAS, ETC) --
+        // -- EMBESTIFRESA --
         if (nombre == "embestifresa")
         {
             if (bloqueadoPorDesplazador) return;
@@ -53,6 +107,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- PLATAFORMA ESTÁTICA --
         else if (nombre == "plataforma estatica" || nombre == "plataforma estática")
         {
             PlataformaEstaticaPower script = GetComponent<PlataformaEstaticaPower>();
@@ -62,6 +117,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- COCA AGITADA --
         else if (nombre == "coca agitada")
         {
             if (bloqueadoPorDesplazador) return;
@@ -72,6 +128,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- RESETEO LOCAL --
         else if (nombre == "reseteo local")
         {
             ReseteoLocalPower script = GetComponent<ReseteoLocalPower>();
@@ -81,6 +138,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- BRÚJULA GRAVITACIONAL --
         else if (nombre == "brujula gravitacional" || nombre == "brújula gravitacional")
         {
             BrujulaGravitacionalPower script = GetComponent<BrujulaGravitacionalPower>();
@@ -90,6 +148,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- CUBO REPULSOR --
         else if (nombre == "cubo repulsor")
         {
             CuboRepulsorPower script = GetComponent<CuboRepulsorPower>();
@@ -99,6 +158,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- GEL ADHERENTE --
         else if (nombre == "gel adherente")
         {
             GelAdherentePower script = GetComponent<GelAdherentePower>();
@@ -108,6 +168,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- PASO SOMBRA --
         else if (nombre == "paso sombra")
         {
             PasoSombraPower script = GetComponent<PasoSombraPower>();
@@ -116,6 +177,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 if (script.EjecutarPasoSombra()) RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- SINGULARIDAD --
         else if (nombre == "singularidad")
         {
             SingularidadPower script = GetComponent<SingularidadPower>();
@@ -125,6 +187,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- ERROR DE CÓDIGO --
         else if (nombre == "error de codigo" || nombre == "error de código")
         {
             ErrorDeCodigoPower script = GetComponent<ErrorDeCodigoPower>();
@@ -134,6 +197,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- IMÁN / DESPLAZADOR --
         else if (nombre == "iman" || nombre == "imán" || nombre == "desplazador")
         {
             if (nombre.Contains("desplazador"))
@@ -144,13 +208,62 @@ public class Controlador_Poderes_Principal : MonoBehaviour
             if (nombre.Contains("iman"))
             {
                 GetComponent<ImanPower>()?.EjecutarIman();
+                RegistrarEventoPoder(rawNombre);
             }
         }
+
+        // Refrescar las cargas visuales inmediatamente tras gastar un uso con la tecla X
+        ActualizarHUDConCargasDelPoderActual();
+    }
+
+    /// <summary>
+    /// Escanea mediante Reflexión el script del poder actual y extrae dinámicamente sus cargasRestantes.
+    /// </summary>
+    private void ActualizarHUDConCargasDelPoderActual()
+    {
+        if (HUDPoderesManager.Instance == null || miHUD == null) return;
+
+        string rawNombre = miHUD.ObtenerNombrePoderActual();
+        if (string.IsNullOrEmpty(rawNombre)) return;
+
+        string nombre = rawNombre.Trim().ToLower();
+
+        // Excluimos explícitamente los que no son por cargas discretas de toque
+        if (nombre == "g-inversor" || nombre == "mochila de cocas")
+        {
+            HUDPoderesManager.Instance.ActualizarCargasVisuales(0);
+            return;
+        }
+
+        // Normalizamos el string para que coincida con los nombres de las clases de C# (Ej: "plataforma estática" -> "PlataformaEstaticaPower")
+        string nombreLimpio = rawNombre.Replace(" ", "");
+        nombreLimpio = nombreLimpio.Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+        nombreLimpio = nombreLimpio.Replace("Á", "A").Replace("É", "E").Replace("Í", "I").Replace("Ó", "O").Replace("Ú", "U");
+
+        string nombreScriptPoder = nombreLimpio + "Power";
+
+        // Buscamos el script adjunto en el jugador
+        Component scriptPoder = GetComponent(nombreScriptPoder);
+
+        if (scriptPoder != null)
+        {
+            var campoCargas = scriptPoder.GetType().GetField("cargasRestantes");
+
+            if (campoCargas != null)
+            {
+                int cargasFieles = (int)campoCargas.GetValue(scriptPoder);
+                HUDPoderesManager.Instance.ActualizarCargasVisuales(cargasFieles);
+                return;
+            }
+        }
+
+        HUDPoderesManager.Instance.ActualizarCargasVisuales(0);
     }
 
     private void RegistrarEventoPoder(string nombreOriginal)
     {
-        miHUD.RegistrarUsoDePoder();
+        if (miHUD != null) miHUD.RegistrarUsoDePoder();
+
         if (SkillManager.Instance != null)
         {
             SkillManager.Instance.RegistraUsoPoder(nombreOriginal);
@@ -159,6 +272,8 @@ public class Controlador_Poderes_Principal : MonoBehaviour
 
     private void ProcesarPoderesContinuos()
     {
+        if (miHUD == null) return;
+
         string rawNombre = miHUD.ObtenerNombrePoderActual();
         if (string.IsNullOrEmpty(rawNombre)) return;
 
@@ -174,7 +289,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
 
             if (nombre == "g-inversor" && barraSeguimiento != null)
             {
-                // Conectado a nivelMedidor y medidorMaximo de GInversorPower
                 barraSeguimiento.ActualizarEstado(scriptGravedad.nivelMedidor, scriptGravedad.medidorMaximo, true);
                 mostrarBarra = true;
             }
@@ -189,7 +303,6 @@ public class Controlador_Poderes_Principal : MonoBehaviour
 
             if (nombre == "mochila de cocas" && barraSeguimiento != null)
             {
-                // Conectado a nivelMedidor y medidorMaximo de MochilaCocasPower
                 barraSeguimiento.ActualizarEstado(scriptMochila.nivelMedidor, scriptMochila.medidorMaximo, true);
                 mostrarBarra = true;
             }
@@ -202,7 +315,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
             scriptSingularidad.estaSeleccionado = (nombre == "singularidad");
         }
 
-        // Si el poder actual no es uno de los continuos o no hay HUD, ocultamos la barra
+        // Apagar la barra de combustible continua si no se está usando ninguna habilidad de este tipo
         if (!mostrarBarra && barraSeguimiento != null)
         {
             barraSeguimiento.ActualizarEstado(0, 0, false);

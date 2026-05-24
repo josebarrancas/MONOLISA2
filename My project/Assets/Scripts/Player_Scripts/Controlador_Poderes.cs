@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // Necesario para obtener las referencias de tipo Image
 
 public class Controlador_Poderes : MonoBehaviour
 {
@@ -6,7 +7,10 @@ public class Controlador_Poderes : MonoBehaviour
     public bool bloqueadoPorDesplazador = false;
 
     [Header("Barra de Combustible (Seguimiento)")]
-    public BarraSeguimiento barraSeguimiento; // Arrastra la barra aquí en el Inspector
+    public BarraSeguimiento barraSeguimiento; // Arrastra tu barra continua aquí
+
+    // Variable para rastrear qué poder estaba equipado en el frame anterior
+    private string ultimoNombrePoder = "";
 
     void Start()
     {
@@ -15,18 +19,64 @@ public class Controlador_Poderes : MonoBehaviour
         {
             Debug.LogError("¡ALERTA INICIAL!: No se encontró el HUD (PowerSelector) al iniciar el juego.");
         }
+        else
+        {
+            // Sincroniza automáticamente el icono y las cargas iniciales al arrancar la escena
+            Invoke("SincronizarNuevaBarraAlInicio", 0.05f);
+        }
+    }
+
+    private void SincronizarNuevaBarraAlInicio()
+    {
+        ActualizarIconoYCargas();
     }
 
     void Update()
     {
-        if (Time.timeScale == 0) return;
+        if (Time.timeScale == 0 || selectorUI == null) return;
 
+        // ==========================================================
+        // DETECCIÓN VISUAL: ¿El jugador cambió de poder en este frame?
+        // ==========================================================
+        string poderActual = selectorUI.ObtenerNombrePoderActual();
+        if (poderActual != ultimoNombrePoder)
+        {
+            ActualizarIconoYCargas();
+        }
+
+        // Ejecución por pulsación de botón
         if (Input.GetKeyDown(KeyCode.X))
         {
             EjecutarPoderDeToque();
         }
 
         ProcesarPoderesContinuos();
+    }
+
+    /// <summary>
+    /// Sincroniza de golpe tanto el Sprite del icono actual como las cargas en el HUD.
+    /// </summary>
+    private void ActualizarIconoYCargas()
+    {
+        if (selectorUI == null || HUDPoderesManager.Instance == null) return;
+
+        // Actualizamos el rastro del nombre
+        ultimoNombrePoder = selectorUI.ObtenerNombrePoderActual();
+
+        // 1. OBTENER EL SPRITE DESDE EL RECTTRANSFORM CORRECTO DEL CIRCULO
+        if (selectorUI.iconoPoderActual != null)
+        {
+            Image imgCirculo = selectorUI.iconoPoderActual.GetComponent<Image>();
+
+            if (imgCirculo != null && imgCirculo.sprite != null)
+            {
+                // Le pasamos ese mismo sprite a tu barra fija del HUD
+                HUDPoderesManager.Instance.CambiarIconoPoder(imgCirculo.sprite);
+            }
+        }
+
+        // 2. FORZAR ACTUALIZACIÓN DE LAS CARGAS DEL NUEVO PODER (Reflexión)
+        ActualizarHUDConCargasDelPoderActual();
     }
 
     private void EjecutarPoderDeToque()
@@ -140,6 +190,52 @@ public class Controlador_Poderes : MonoBehaviour
                 selectorUI.RegistrarUsoDePoder();
             }
         }
+
+        // Refrescar las cargas visuales inmediatamente en el HUD tras el uso de la tecla X
+        ActualizarHUDConCargasDelPoderActual();
+    }
+
+    /// <summary>
+    /// Escanea mediante Reflexión el script del poder actual y extrae dinámicamente sus cargasRestantes.
+    /// </summary>
+    private void ActualizarHUDConCargasDelPoderActual()
+    {
+        if (HUDPoderesManager.Instance == null || selectorUI == null) return;
+
+        string nombrePoder = selectorUI.ObtenerNombrePoderActual();
+
+        // Si es un poder continuo, forzamos a la barra de círculos a ponerse en 0 (oculta o vacía)
+        if (nombrePoder == "G-Inversor" || nombrePoder == "Mochila de Cocas")
+        {
+            HUDPoderesManager.Instance.ActualizarCargasVisuales(0);
+            return;
+        }
+
+        // Formateamos el string para buscar el componente (Ej: "Plataforma Estatica" -> "PlataformaEstaticaPower")
+        string nombreLimpio = nombrePoder.Replace(" ", "");
+        string nombreScriptPoder = nombreLimpio + "Power";
+
+        // Buscamos el componente adjunto en este mismo objeto
+        Component scriptPoder = GetComponent(nombreScriptPoder);
+
+        if (scriptPoder != null)
+        {
+            // Buscamos la variable pública entera "cargasRestantes" en la clase
+            var campoCargas = scriptPoder.GetType().GetField("cargasRestantes");
+
+            if (campoCargas != null)
+            {
+                // Extraemos el valor real
+                int cargasFieles = (int)campoCargas.GetValue(scriptPoder);
+
+                // Lo mandamos al HUD
+                HUDPoderesManager.Instance.ActualizarCargasVisuales(cargasFieles);
+                return;
+            }
+        }
+
+        // Por seguridad, si el script no se encuentra o no tiene cargas, se manda 0
+        HUDPoderesManager.Instance.ActualizarCargasVisuales(0);
     }
 
     private void RegistrarEventoPoder(string nombre)
@@ -185,7 +281,7 @@ public class Controlador_Poderes : MonoBehaviour
             }
         }
 
-        // Apagar la barra si no se está usando un poder continuo
+        // Apagar la barra de combustible continua si no está activa
         if (!mostrarBarra && barraSeguimiento != null)
         {
             barraSeguimiento.ActualizarEstado(0, 0, false);

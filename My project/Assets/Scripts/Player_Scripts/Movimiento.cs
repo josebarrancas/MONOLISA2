@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class Movimiento : MonoBehaviour
 {
-    // ... (Sus variables se mantienen igual) ...
     public float Speed;
     public float JumpForce;
     private float tiempoCoyote;
@@ -22,6 +21,55 @@ public class Movimiento : MonoBehaviour
         Animator = GetComponent<Animator>();
         embestifresa = GetComponent<EmbestifresaPower>();
         Physics2D.gravity = new Vector2(0, -9.81f);
+
+        
+        CargarCanvasFondoAutomatico();
+    }
+
+    private void CargarCanvasFondoAutomatico()
+    {
+        
+        if (GameObject.Find("Canvas_Fondo(Clone)") == null && GameObject.Find("Canvas_Fondo") == null)
+        {
+           
+            GameObject prefabFondo = Resources.Load<GameObject>("Canvas_Fondo");
+
+            if (prefabFondo != null)
+            {
+                GameObject fondoInstanciado = Instantiate(prefabFondo);
+                fondoInstanciado.transform.position = Vector3.zero;
+
+                // 1. BUSCAMOS LA CÁMARA ACTIVA DE ESTA ESCENA
+                Camera camaraActual = Camera.main;
+
+                // Por si acaso no la tienes etiquetada como MainCamera, buscamos cualquier cámara funcional
+                if (camaraActual == null)
+                {
+                    camaraActual = FindObjectOfType<Camera>();
+                }
+
+                
+                if (camaraActual != null)
+                {
+                    Canvas canvasComponent = fondoInstanciado.GetComponent<Canvas>();
+                    if (canvasComponent != null)
+                    {
+                        canvasComponent.worldCamera = camaraActual;
+
+                        // Opcional: Aseguramos por código que se vaya al fondo del todo
+                        canvasComponent.sortingOrder = -100;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Fondo Creado: ¡No se encontró ninguna Cámara en esta escena para acoplar el fondo!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Movimiento Player: No se encontró el Prefab 'Canvas_Fondo' en la carpeta Assets/Resources.");
+            }
+        }
     }
 
     void Update()
@@ -85,7 +133,6 @@ public class Movimiento : MonoBehaviour
             }
             else
             {
-            
                 if (SkillManager.Instance != null)
                     SkillManager.Instance.intentosNivel++;
 
