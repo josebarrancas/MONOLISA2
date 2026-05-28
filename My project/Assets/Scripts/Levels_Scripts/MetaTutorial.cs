@@ -28,6 +28,15 @@ public class MetaTutorial : MonoBehaviour
         {
             Debug.Log("<color=cyan>MetaTutorial:</color> Tutorial completado.");
 
+            
+            PlayerPrefs.SetFloat("Partida_TiempoActual", 0f);
+            PlayerPrefs.Save();
+
+           
+            ControlarPausaMenu.CronometroActivo = true;
+
+            Debug.Log("[QA TIEMPO] ¡Meta Cruzada! Tiempo reseteado a 0 y cronómetro encendido globalmente.");
+
             LevelLoader.Instance.nivelGlobal = 0;
             LevelLoader.Instance.nivelActualIndice = 0;
 
