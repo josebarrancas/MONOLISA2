@@ -8,8 +8,8 @@ public class PowerSelectorPrincipal : MonoBehaviour
     [Header("Base de Datos de Poderes")]
     public List<PoderData> todosLosPoderes = new List<PoderData>();
 
-    // CAMBIO: Renombrado a poderesEnUso para reflejar que ahora son 3
-    private List<PoderData> poderesEnUso = new List<PoderData>();
+    // CAMBIO: Ahora es public para que el Manager filtre los duplicados y lea qué poderes tiene equipados
+    public List<PoderData> poderesEnUso = new List<PoderData>();
     private int indiceActual;
 
     [Header("Referencias UI")]
@@ -178,5 +178,20 @@ public class PowerSelectorPrincipal : MonoBehaviour
             actual.cantidadUsos--;
             ActualizarVisualPoder(actual);
         }
+    }
+
+    public PoderData IntercambiarPoderActivo(PoderData nuevoPoder)
+    {
+        // 1. Guardamos una copia del poder que el jugador tiene actualmente en el slot
+        PoderData poderViejo = poderesEnUso[indiceActual];
+
+        // 2. Sobrescribimos el slot del jugador con el poder de la caja
+        poderesEnUso[indiceActual] = nuevoPoder;
+
+        // 3. Forzamos la actualización visual de la UI de este slot
+        ActualizarVisualPoder(poderesEnUso[indiceActual]);
+
+        // 4. Devolvemos el poder viejo para que la caja se lo quede
+        return poderViejo;
     }
 }

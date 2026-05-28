@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c62025bb8366764e9428d29ccd3b909, type: 3}
-  m_Name: Lvl_37_Based
-  m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  nombreEscena: Lvl_37_Based
-  ID: 37
-  etiquetasNivel:
-  - Horizontal
-  - Cruzar Abismo
-  - Vertical
+  m_Script: {fileID: 11500000, guid: fdae1f2cdcff51541abcb5af41d3ed5f, type: 3}
+  m_Name: Poder_Impulso
+  m_EditorClassIdentifier: Assembly-CSharp::PoderData
+  nombre: 
+  explicacion: 
+  icono: {fileID: 0}
+  etiquetas: []
+  tipo: 0
+  cantidadUsos: 0
+  cargaMedidor: 0

@@ -466,6 +466,7 @@ GameObject:
   - component: {fileID: -7119622624057941546}
   - component: {fileID: 3003776807825933331}
   - component: {fileID: -1648296092945758564}
+  - component: {fileID: 6897285867980088763}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -924,3 +925,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf9eca303f8c4f74094efeec1a4db246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CentinelaDePoderes
+--- !u!114 &6897285867980088763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4276265352606661548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2613d8283c3e1504c81b9e829dd3c357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImpulsoPower
+  cargasRestantes: 5
+  fuerzaPorCelda: 20
+  limite3x3: 1.5
+  limite5x5: 2.5

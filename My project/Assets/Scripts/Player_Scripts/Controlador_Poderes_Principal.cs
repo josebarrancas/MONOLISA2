@@ -13,6 +13,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
     // Variable para rastrear qué poder estaba equipado en el frame anterior
     private string ultimoNombrePoder = "";
 
+
     void Start()
     {
         miHUD = FindObjectOfType<PowerSelectorPrincipal>();
@@ -82,6 +83,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         // Actualizar las cargas de inmediato
         ActualizarHUDConCargasDelPoderActual();
     }
+
 
     private void EjecutarPoderDeToque()
     {
@@ -198,6 +200,22 @@ public class Controlador_Poderes_Principal : MonoBehaviour
                 RegistrarEventoPoder(rawNombre);
             }
         }
+        // -- IMPULSO --
+        else if (nombre == "impulso")
+        {
+            ImpulsoPower script = GetComponent<ImpulsoPower>();
+            if (script != null && script.cargasRestantes > 0)
+            {
+                // Leemos las teclas de dirección que el jugador está presionando
+                float inputX = Input.GetAxisRaw("Horizontal");
+                float inputY = Input.GetAxisRaw("Vertical");
+
+                Vector2 direccionApuntada = new Vector2(inputX, inputY);
+
+                script.EjecutarImpulso(direccionApuntada);
+                RegistrarEventoPoder(rawNombre);
+            }
+        }
         // -- IMÁN / DESPLAZADOR --
         else if (nombre == "iman" || nombre == "imán" || nombre == "desplazador")
         {
@@ -271,6 +289,8 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         }
     }
 
+
+
     private void ProcesarPoderesContinuos()
     {
         if (miHUD == null)
@@ -329,5 +349,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         {
             barraSeguimiento.ActualizarEstado(0, 0, false);
         }
+
     }
+
 }

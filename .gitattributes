@@ -3,3 +3,4 @@
 *.dylib filter=lfs diff=lfs merge=lfs -text
 ArtifactDB filter=lfs diff=lfs merge=lfs -text
 ArtifatDB filter=lfs diff=lfs merge=lfs -text
+My[[:space:]]project/Assets/Levels/Scenes/Lvl_Based_Tutorial.unity filter=lfs diff=lfs merge=lfs -text
