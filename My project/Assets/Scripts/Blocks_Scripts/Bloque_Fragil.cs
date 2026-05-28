@@ -10,7 +10,7 @@ public class Bloque_Fragil : MonoBehaviour
     public float tiempoParaRomper = 2.0f;
     public float intensidadVibracion = 0.1f;
     public float gravedad = 3f;
-    [Tooltip("Cuánto tiempo dura cayendo antes de volverse flotante")]
+    [Tooltip("Cuánto tiempo dura cayendo antes de volverse desenganche")]
     public float tiempoCayendo = 1.0f;
 
     private float cronometro = 0;
@@ -31,11 +31,9 @@ public class Bloque_Fragil : MonoBehaviour
         {
             cronometro += Time.deltaTime;
 
-            // --- 1. LÓGICA DE ANIMACIÓN ---
             float progreso = (cronometro / tiempoParaRomper) * 1f;
             anim.SetFloat("status", progreso);
 
-            // --- 2. LÓGICA DE VIBRACIÓN (FASE FINAL) ---
             if (cronometro > tiempoParaRomper * 0.25f && cronometro < tiempoParaRomper)
             {
                 float offsetX = Random.Range(-intensidadVibracion, intensidadVibracion);
@@ -43,7 +41,6 @@ public class Bloque_Fragil : MonoBehaviour
                 transform.position = posicionOriginal + new Vector3(offsetX, offsetY, 0);
             }
 
-            // --- 3. LÓGICA DE CAÍDA ---
             if (cronometro >= tiempoParaRomper)
             {
                 Caer();
@@ -65,30 +62,25 @@ public class Bloque_Fragil : MonoBehaviour
         Debug.Log("¡EL BLOQUE CAE!");
         GetComponent<Collider2D>().enabled = true;
 
-        // Quitamos el Destroy(gameObject, 10f) para que no se borre el bloque,
-        // y en su lugar iniciamos la espera para activar el modo flotante.
         StartCoroutine(EsperarParaFlotar());
     }
 
     private IEnumerator EsperarParaFlotar()
     {
-        // Espera el tiempo configurado mientras el bloque va cayendo por gravedad
         yield return new WaitForSeconds(tiempoCayendo);
 
-        // Buscamos el segundo script en este mismo bloque
-        Bloque_Fragil_A_Flotante scriptFlotante = GetComponent<Bloque_Fragil_A_Flotante>();
+        Bloque_Fragil_A_Desenganche scriptFlotante = GetComponent<Bloque_Fragil_A_Desenganche>();
         if (scriptFlotante != null)
         {
-            scriptFlotante.enabled = true; // Activa el comportamiento flotante
+            scriptFlotante.enabled = true;
         }
 
-        this.enabled = false; // Apaga este script original para que no vuelva a calcular el Update
+        this.enabled = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Modificación sutil: solo se activa si el script flotante no ha tomado el control
-        if (!seActivo && (GetComponent<Bloque_Fragil_A_Flotante>() == null || !GetComponent<Bloque_Fragil_A_Flotante>().enabled))
+        if (!seActivo && (GetComponent<Bloque_Fragil_A_Desenganche>() == null || !GetComponent<Bloque_Fragil_A_Desenganche>().enabled))
         {
             seActivo = true;
         }

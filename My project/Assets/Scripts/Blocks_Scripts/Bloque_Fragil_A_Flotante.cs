@@ -1,43 +1,59 @@
 using UnityEngine;
 
-public class Bloque_Fragil_A_Flotante : MonoBehaviour
+public class Bloque_Fragil_A_Desenganche : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer; // <-- Variable para la imagen
+    private SpriteRenderer spriteRenderer;
 
-    [Header("Configuracion de bloque flotante")]
+    [Header("Configuración de Desenganche")]
     public float fuerzaImpacto = 1f;
+    [Tooltip("Límite en el eje Y. Si el bloque cae por debajo de este valor, se destruirá.")]
+    public float limiteCaidaY = -20f;
 
-    [Header("Visual Flotante")]
-    [Tooltip("La imagen que tendrá el bloque cuando ya esté flotando fijo en el aire")]
-    public Sprite imagenBloqueFlotante; // <-- Nueva ranura en el Inspector
+    [Header("Visual Desenganche")]
+    [Tooltip("La imagen que tendrá el bloque al desprenderse")]
+    public Sprite imagenBloqueDesenganche;
 
     void OnEnable()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); // <-- Asignamos el componente
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ... Tu lógica de congelar el Rigidbody y damping que ya tenías ...
+        // Etiqueta actualizada
+        gameObject.tag = "desenganche";
+
+        // RQF26: El sistema aplica gravedad a las plataformas
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 0;
+        rb.gravityScale = 1f; // Gravedad restaurada para que caiga
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        rb.linearVelocity = Vector2.zero;
 
-        // CAMBIO AL ESTADO FLOTANTE: Restauramos la imagen a una textura firme
-        if (imagenBloqueFlotante != null && spriteRenderer != null)
+        // Conservamos la velocidad actual por si ya estaba en movimiento
+        // rb.linearVelocity = Vector2.zero; (Eliminado para evitar frenos antinaturales al desengancharse)
+
+        if (imagenBloqueDesenganche != null && spriteRenderer != null)
         {
-            spriteRenderer.sprite = imagenBloqueFlotante;
+            spriteRenderer.sprite = imagenBloqueDesenganche;
         }
 
-        Debug.Log("-> El bloque ahora es flotante y cambió su aspecto visual.");
+        Debug.Log("-> El bloque se desenganchó: Ahora tiene gravedad y etiqueta 'Desenganche'.");
+    }
+
+    void Update()
+    {
+        // RQF28: Desaparece si cae fuera de los límites
+        if (transform.position.y < limiteCaidaY)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!this.enabled) return;
 
-        Debug.Log("Hay colision con el bloque flotante");
-        Vector2 dirrecionImpacto = (transform.position - collision.transform.position).normalized;
-        rb.AddForce(dirrecionImpacto * fuerzaImpacto, ForceMode2D.Impulse);
+        // RQF27: Mover mediante contacto o poderes
+        Debug.Log("Colisión con bloque Desenganche");
+        Vector2 direccionImpacto = (transform.position - collision.transform.position).normalized;
+        rb.AddForce(direccionImpacto * fuerzaImpacto, ForceMode2D.Impulse);
     }
 }
