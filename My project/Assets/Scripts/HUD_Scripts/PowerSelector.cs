@@ -42,7 +42,7 @@ public class PowerSelector : MonoBehaviour
         PrepararPartida();
     }
 
-   public void PrepararPartida()
+    public void PrepararPartida()
     {
         if (todosLosPoderes == null || todosLosPoderes.Count == 0)
         {
@@ -69,14 +69,28 @@ public class PowerSelector : MonoBehaviour
     {
         if (circuloAzul == null) return;
 
-        expandido = Input.GetKey(KeyCode.C);
-
-        if (expandido)
+        // ==========================================================
+        // CANDADO DE SEGURIDAD: MENÚ DE PAUSA
+        // ==========================================================
+        if (ControlarPausaMenu.IsPausado)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) CambiarPoder(-1);
-            if (Input.GetKeyDown(KeyCode.RightArrow)) CambiarPoder(1);
+            // Forzamos a que el estado sea falso para que el menú se cierre si se quedó abierto
+            expandido = false;
+        }
+        else
+        {
+            // Si el juego NO está pausado, leemos el teclado normalmente
+            expandido = Input.GetKey(KeyCode.C);
+
+            if (expandido)
+            {
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) CambiarPoder(-1);
+                if (Input.GetKeyDown(KeyCode.RightArrow)) CambiarPoder(1);
+            }
         }
 
+        // Mantenemos esta sección ejecutándose siempre con 'unscaledDeltaTime'
+        // para que si pausas el juego, el semicírculo tenga permitido encogerse fluidamente.
         float delta = Time.unscaledDeltaTime * velocidadSuavizado;
 
         // Animación del Círculo

@@ -87,14 +87,28 @@ public class PowerSelectorPrincipal : MonoBehaviour
     {
         if (this == null || circuloAzul == null) return;
 
-        expandido = Input.GetKey(KeyCode.C);
-
-        if (expandido)
+        // ==========================================================
+        // CANDADO DE SEGURIDAD: MENÚ DE PAUSA (CAMPAÑA)
+        // ==========================================================
+        if (ControlarPausaMenu.IsPausado)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) CambiarPoder(-1);
-            if (Input.GetKeyDown(KeyCode.RightArrow)) CambiarPoder(1);
+            // Forzamos el cierre si el menú de pausa interrumpe la selección
+            expandido = false;
+        }
+        else
+        {
+            // Si el juego NO está en pausa, procesamos la entrada normalmente
+            expandido = Input.GetKey(KeyCode.C);
+
+            if (expandido)
+            {
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) CambiarPoder(-1);
+                if (Input.GetKeyDown(KeyCode.RightArrow)) CambiarPoder(1);
+            }
         }
 
+        // Mantenemos las interpolaciones (Lerp) corriendo sin escala de tiempo 
+        // para asegurar un cierre limpio y fluido durante la pausa
         float delta = Time.unscaledDeltaTime * velocidadSuavizado;
 
         Vector3 objetivoCirculo = expandido ? escalaExpandida : Vector3.one;

@@ -13,15 +13,28 @@ public class BarraSeguimiento : MonoBehaviour
 
     public void ActualizarEstado(float actual, float max, bool mostrar)
     {
-        // Solo activamos si el poder lo requiere
+        // MENSAJE DE CONTROL 1: ¿Al menos está entrando aquí?
+        Debug.Log($"[BARRA] Recibido - Mostrar: {mostrar} | Actual: {actual} | Max: {max}");
+
+        if (contenidoVisual == null)
+        {
+            Debug.LogError("[BARRA] ¡Falta arrastrar el 'Contenido Visual' en el Inspector!");
+            return;
+        }
+
         contenidoVisual.SetActive(mostrar);
 
         if (mostrar && max > 0)
         {
-            // Calculamos el frame (0.0 lleno - 1.0 vac�o)
             float porcentaje = 1f - (actual / max);
-            animatorBarra.SetFloat("Progreso", Mathf.Clamp01(porcentaje));
-            Debug.Log($"Energ�a: {actual}/{max} - Porcentaje enviado: {porcentaje}");
+            if (animatorBarra != null)
+            {
+                animatorBarra.SetFloat("Progreso", Mathf.Clamp01(porcentaje));
+            }
+            else
+            {
+                Debug.LogError("[BARRA] ¡No hay un Animator asignado en 'animatorBarra'!");
+            }
         }
     }
 }

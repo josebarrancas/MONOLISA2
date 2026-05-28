@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Controla el menu de pausa del juego, ademas de progamar los botonoes de accion
-/// de este menu de pausa
+/// Controla el menu de pausa del juego, ademas de programar los botones de accion
+/// de este menu de pausa.
 /// </summary>
 public class ControlarPausaMenu : MonoBehaviour
 {
-    // Cambiado a lista [] para soportar múltiples objetos del menú
+    // Propiedad estática accesible desde otros scripts
+    public static bool IsPausado { get; private set; }
+
     public GameObject[] objectoMenuPausa;
     private bool juegoPausado = false;
 
@@ -15,6 +17,7 @@ public class ControlarPausaMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         juegoPausado = false;
+        IsPausado = false; // <-- CORRECCIÓN 1: Asegurar que inicie en false al cargar el nivel
 
         // Bucle para asegurar que todos los objetos de la lista inicien apagados
         foreach (GameObject obj in objectoMenuPausa)
@@ -25,36 +28,40 @@ public class ControlarPausaMenu : MonoBehaviour
 
     void Update()
     {
-        //Detectar teclas "Esc" para entrar en el menu de pausa
+        // Detectar teclas "Esc" para entrar o salir del menu de pausa
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (juegoPausado) Reanudar();
             else Pausar();
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) ReiniciarNivel();
+        // CONDICIÓN PROTEGIDA: Solo reinicia con 'R' si el juego está en pausa
+        if (juegoPausado && Input.GetKeyDown(KeyCode.R))
+        {
+            ReiniciarNivel();
+        }
     }
 
-    //Con esta funcion controlaremos cuando el escenario entre en pausa
-    void Pausar()
+    // Con esta funcion controlaremos cuando el escenario entre en pausa
+    public void Pausar()
     {
-        // Recorremos la lista para encender cada elemento 
+        // Recorremos la lista para encender cada elemento (Fondo, Botones, etc.)
         foreach (GameObject obj in objectoMenuPausa)
         {
             if (obj != null) obj.SetActive(true);
         }
 
-        //Con esto indicaremos a los "FixedUpdate" que dejen de correr
-        //por lo que la gravedad y el movimiento se congelaran al instante
         Time.timeScale = 0f;
-
-        //Cambiamos el estado de "juegoPausado" para indicar que el juego se encuentra pausado
         juegoPausado = true;
-        Debug.Log("Juego pausado");
+
+        // <-- CORRECCIÓN 2: Avisar a los demás scripts que el juego REALMENTE está pausado
+        IsPausado = true;
+
+        Debug.Log("[QA PAUSA] Juego pausado. IsPausado = true.");
     }
 
-    //Funcion para reanudar el tiempo y el movimiento en el escenario
-   public void Reanudar()
+    // Funcion para reanudar el tiempo y el movimiento en el escenario
+    public void Reanudar()
     {
         // Recorremos la lista para apagar cada elemento
         foreach (GameObject obj in objectoMenuPausa)
@@ -62,18 +69,26 @@ public class ControlarPausaMenu : MonoBehaviour
             if (obj != null) obj.SetActive(false);
         }
 
-        //Indicamos a los "FixedUpdate" que ya pueden seguir trabajando
-        //por lo que se reanuda el tiempo y el movimiento del escenario
         Time.timeScale = 1f;
-
-        //Cambiamos el estado de la bandera para indicar que el juego ya no se encuentra en estado "Pausado"
         juegoPausado = false;
+
+        // <-- CORRECCIÓN 3: Avisar a los demás scripts que el juego volvió a correr
+        IsPausado = false;
+
+        Debug.Log("[QA PAUSA] Juego reanudado. IsPausado = false.");
     }
 
-    //Funcion para evitar que al volver a cargar la escena se quede congelada
-    void ReiniciarNivel()
+    public void ReiniciarNivel()
     {
         Time.timeScale = 1f;
+        IsPausado = false; // Resetear antes de cambiar de escena
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void VolverAlMenuPrincipal()
+    {
+        Time.timeScale = 1f;
+        IsPausado = false; // Resetear antes de cambiar de escena
+        SceneManager.LoadScene("MenuPrincipal");
     }
 }
