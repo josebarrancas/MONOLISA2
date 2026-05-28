@@ -13,6 +13,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
     // Variable para rastrear qué poder estaba equipado en el frame anterior
     private string ultimoNombrePoder = "";
 
+
     void Start()
     {
         miHUD = FindObjectOfType<PowerSelectorPrincipal>();
@@ -82,6 +83,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         // Actualizar las cargas de inmediato
         ActualizarHUDConCargasDelPoderActual();
     }
+
 
     private void EjecutarPoderDeToque()
     {
@@ -271,6 +273,8 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         }
     }
 
+
+
     private void ProcesarPoderesContinuos()
     {
         if (miHUD == null)
@@ -329,5 +333,7 @@ public class Controlador_Poderes_Principal : MonoBehaviour
         {
             barraSeguimiento.ActualizarEstado(0, 0, false);
         }
+
     }
+
 }

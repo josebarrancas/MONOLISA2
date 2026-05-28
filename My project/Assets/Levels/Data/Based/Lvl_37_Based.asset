@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c62025bb8366764e9428d29ccd3b909, type: 3}
   m_Name: Lvl_37_Based
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  nombreEscena: Lvl_35_Based
-  ID: 35
+  nombreEscena: Lvl_37_Based
+  ID: 37
   etiquetasNivel:
   - Horizontal
   - Cruzar Abismo
