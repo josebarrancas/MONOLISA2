@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MetaNivel : MonoBehaviour
 {
@@ -13,28 +13,42 @@ public class MetaNivel : MonoBehaviour
             yaSeActivo = true;
 
             // --- PASO 1: AVISAR AL SKILL MANAGER ---
-            // Esto es lo que le faltaba. Aqu� calculamos los puntos antes de cambiar.
             if (SkillManager.Instance != null)
             {
                 SkillManager.Instance.CalcularResultados();
             }
             else
             {
-                Debug.LogWarning("MetaNivel: No se encontr� el SkillManager para guardar resultados.");
+                Debug.LogWarning("MetaNivel: No se encontró el SkillManager para guardar resultados.");
             }
 
             // --- PASO 2: AVANZAR DE NIVEL ---
             if (LevelLoader.Instance != null)
             {
+                // Avanzamos el contador primero para saber qué nivel se acaba de completar
                 LevelLoader.Instance.nivelGlobal++;
 
-                // ELIMINADO: LevelLoader.Instance.nivelActualIndice++; 
-                // (El LevelLoader ya hace esto internamente, no lo sume doble).
+                // CORTE ENGRANADO: Si el nivel global llegó a 9, significa que la campaña se acabó
+                if (LevelLoader.Instance.nivelGlobal >= 9)
+                {
+                    Debug.Log("🏁 ¡Nivel 9 alcanzado y completado! Asegurando datos y cargando Pantalla Final...");
 
-                // Leemos la dificultad que el SkillManager acaba de calcular en el Paso 1
-                string dif = SkillManager.Instance != null ? SkillManager.Instance.estadoActual : "Based";
+                    if (SkillManager.Instance != null)
+                    {
+                        // Forzamos el guardado en el disco local antes del cambio de escena
+                        PlayerPrefs.SetFloat("Partida_TiempoActual", SkillManager.Instance.tiempoNivel);
+                        PlayerPrefs.SetInt("Partida_PuntajeActual", (int)SkillManager.Instance.skillActual);
+                        PlayerPrefs.Save();
+                    }
 
-                LevelLoader.Instance.CargarSiguienteNivel(dif);
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("Escena_PantallaFinal");
+                }
+                else
+                {
+                    // FLUJO ORDINARIO (Niveles 1 al 8)
+                    string dif = SkillManager.Instance != null ? SkillManager.Instance.estadoActual : "Based";
+                    LevelLoader.Instance.CargarSiguienteNivel(dif);
+                }
             }
         }
     }
