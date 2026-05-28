@@ -939,5 +939,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ImpulsoPower
   cargasRestantes: 5
   fuerzaPorCelda: 20
-  limite3x3: 1.5
-  limite5x5: 2.5
+  tamanoDeCelda: 2
+  limite3x3: 3.5
+  limite5x5: 6

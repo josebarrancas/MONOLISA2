@@ -261,8 +261,53 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_22_Solution.unity
     guid: e81225b9631d0f54a9bb38b9b42dab25
   - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Based/Lvl_40_Based.unity
+    guid: 09ef0b056a2a1034698e2a0e9672e2d2
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Issue/Lvl_40_Issue.unity
+    guid: 0dd91c6e225b5954ca663da130681f8d
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Issue/Lvl_41_Issue.unity
+    guid: c0c40f445b10b9e48b0be249f66149ec
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Issue/Lvl_42_Issue.unity
+    guid: 74af37cc6054f0647946b937d8836711
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Issue/Lvl_43_Issue.unity
+    guid: 99b7031cc66a83b498bd3d90d5c5f265
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Issue/Lvl_44_Issue.unity
+    guid: 4aadb75424f26d944831aa1a36298f70
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Based/Lvl_41_Based.unity
+    guid: 2284739a9c300c048be37a2e36c4e4fd
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Based/Lvl_42_Based.unity
+    guid: 4afd5ecb1af2a564e8e1d5776c7d644c
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Based/Lvl_43_Based.unity
+    guid: e0a99b334347943428814a26d16a90a4
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Based/Lvl_44_Based.unity
+    guid: ee159370e074b284f8d0f759f6f2f274
+  - enabled: 1
     path: Assets/Levels/Scenes/Fase_4_6/Soluction/Lvl_23_Solution.unity
     guid: 60b573c3ac96dc04185c6e6949a49872
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Solution/Lvl_40_Solution.unity
+    guid: a560e8d2ba684d64f9991f41d6c255ad
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Solution/Lvl_41_Solution.unity
+    guid: a69ceaeaf2cb1914984a0c6e470a12c4
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Solution/Lvl_42_Solution.unity
+    guid: b5cc7b7c6cf305341a73f4fe3990c71f
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Solution/Lvl_43_Solution.unity
+    guid: c09c489a7c8b1b947bcfe9a6bb5b8e1f
+  - enabled: 1
+    path: Assets/Levels/Scenes/Fase_9/Solution/Lvl_44_Solution.unity
+    guid: 9b573957edfdca54fa6970a4eec0ff30
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

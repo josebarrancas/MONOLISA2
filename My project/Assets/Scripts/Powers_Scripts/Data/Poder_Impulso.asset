@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdae1f2cdcff51541abcb5af41d3ed5f, type: 3}
   m_Name: Poder_Impulso
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
-  nombre: 
-  explicacion: 
-  icono: {fileID: 0}
+  nombre: Impulso
+  explicacion: lanza bloques y monedas a donde mires
+  icono: {fileID: -416060295633103605, guid: 262236bb05f23cf42bc9bb64334b08de, type: 3}
   etiquetas: []
-  tipo: 0
-  cantidadUsos: 0
+  tipo: 1
+  cantidadUsos: 5
   cargaMedidor: 0
