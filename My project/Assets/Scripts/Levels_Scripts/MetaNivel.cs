@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MetaNivel : MonoBehaviour
 {
@@ -31,17 +32,50 @@ public class MetaNivel : MonoBehaviour
                 // CORTE ENGRANADO: Si el nivel global llegó a 9, significa que la campaña se acabó
                 if (LevelLoader.Instance.nivelGlobal >= 9)
                 {
-                    Debug.Log("🏁 ¡Nivel 9 alcanzado y completado! Asegurando datos y cargando Pantalla Final...");
+                    Debug.Log("🏁 ¡Nivel 9 alcanzado y completado! Procesando récords en TXT y cargando Pantalla Final...");
 
+                    // 1. Apagamos el motor del cronómetro de inmediato para congelar el tiempo final
+                    ControlarPausaMenu.CronometroActivo = false;
+
+                    // 2. Leemos los datos que se han estado acumulando en el archivo de texto
+                    var datos = ManejadorGuardadoTexto.CargarDatos();
+
+                    float tiempoFinalCampana = datos.partidaTiempoActual;
+                    float mejorTiempoHistorico = datos.recordMejorTiempoNormal;
+
+                    // Sacamos el puntaje del SkillManager si existe
+                    int puntajeActual = 0;
                     if (SkillManager.Instance != null)
                     {
-                        // Forzamos el guardado en el disco local antes del cambio de escena
-                        PlayerPrefs.SetFloat("Partida_TiempoActual", SkillManager.Instance.tiempoNivel);
-                        PlayerPrefs.SetInt("Partida_PuntajeActual", (int)SkillManager.Instance.skillActual);
-                        PlayerPrefs.Save();
+                        puntajeActual = (int)SkillManager.Instance.skillActual;
                     }
 
-                    UnityEngine.SceneManagement.SceneManager.LoadScene("Escena_PantallaFinal");
+                    int mejorPuntajeHistorico = datos.recordMejorPuntajeNormal;
+
+                    // 3. VALIDACIÓN DEL RÉCORD DE TIEMPO (Menor tiempo = Mejor Récord)
+                    if (tiempoFinalCampana < mejorTiempoHistorico && tiempoFinalCampana > 0.1f)
+                    {
+                        Debug.Log("<color=green>¡NUEVO RÉCORD DE SPEEDRUN DETECTADO EN EL TXT!</color>");
+                        datos.recordMejorTiempoNormal = tiempoFinalCampana;
+                    }
+
+                    // 4. VALIDACIÓN DEL RÉCORD DE PUNTAJE (Mayor puntaje = Mejor Récord)
+                    if (puntajeActual > mejorPuntajeHistorico)
+                    {
+                        Debug.Log("<color=cyan>¡NUEVO RÉCORD DE PUNTAJE DETECTADO EN EL TXT!</color>");
+                        datos.recordMejorPuntajeNormal = puntajeActual;
+                    }
+
+                    // 5. Forzamos el guardado definitivo en el save_data.txt
+                    ManejadorGuardadoTexto.GuardarDatos(
+                        tiempoFinalCampana,
+                        datos.recordMejorTiempoNormal,
+                        puntajeActual,
+                        datos.recordMejorPuntajeNormal
+                    );
+
+                    // 6. Saltamos de escena seguros de que los datos ya están en el Bloc de Notas
+                    SceneManager.LoadScene("Escena_PantallaFinal");
                 }
                 else
                 {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_GInversor
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: G-Inversor
-  explicacion: 
+  explicacion: altera la gravedad
   icono: {fileID: 1738330206788629864, guid: 0ae989c79cbe16a459aaceca9751a5d5, type: 3}
   etiquetas:
   - Vertical

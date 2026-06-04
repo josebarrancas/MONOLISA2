@@ -12,31 +12,26 @@ public class CuboRepulsorLogic : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
-
-        // --- EL TRUCO DE LA INAMOVILIDAD ---
-        // Congelamos la Rotación (para que no ruede) Y congelamos la Posición X 
-        // (para que no pueda ser empujado hacia los lados). 
-        // El eje Y queda libre, así que la gravedad lo hará caer si no hay piso.
         rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Si el jugador toca el cubo
-        if (collision.gameObject.CompareTag("Player"))
+        // Si el jugador toca el cubo
+        if (collision.gameObject.CompareTag("Player"))
         {
             Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (playerRb != null)
             {
-                // Calculamos la dirección dinámica
-                Vector2 direccion = (collision.transform.position - transform.position);
+                // Calculamos la dirección dinámica
+                Vector2 direccion = (collision.transform.position - transform.position);
 
-                // Le inyectamos altura artificial
-                direccion.y += empujeExtraArriba;
+                // Le inyectamos altura artificial
+                direccion.y += empujeExtraArriba;
                 direccion = direccion.normalized;
 
-                // Aplicamos la velocidad para el rebote perfecto
-                playerRb.linearVelocity = direccion * fuerzaRepulsion;
+                // Aplicamos la velocidad para el rebote perfecto
+                playerRb.linearVelocity = direccion * fuerzaRepulsion;
 
                 Debug.Log($"¡Cubo Repulsor activado! Dirección ajustada: {direccion}");
             }
@@ -45,11 +40,12 @@ public class CuboRepulsorLogic : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Regla del doc: Si sale del HUD (toca la zona muerta), se elimina
-        if (collision.CompareTag("Dead"))
+        // Regla del doc: Si sale del HUD (toca la zona muerta), se elimina
+        if (collision.CompareTag("Dead"))
         {
             Destroy(gameObject);
             Debug.Log("Cubo Repulsor eliminado por caer al vacío.");
         }
     }
 }
+

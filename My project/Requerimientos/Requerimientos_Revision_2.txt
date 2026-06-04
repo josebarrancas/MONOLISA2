@@ -1,0 +1,266 @@
+MÓDULO 1: INICIO Y TUTORIAL
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF1 : El jugador debe iniciar en un menú interactivo que funciona como un tutorial del juego.	RQNF1 : El menú interactivo debe tener un tamaño fijo de 16×29 celdas con cámara fija.
+RQF2 : El sistema debe generar al personaje en la plataforma de entrada al comenzar cada nivel.	
+RQF3 : El sistema debe mostrar en pantalla todos los controles disponibles.	RQNF3 : Los controles mostrados deben ser legibles y estar posicionados en la zona superior derecha de la pantalla.
+RQF4 : El sistema debe definir la salida como el objetivo final del nivel.	RQNF4 : Proveer retroalimentación visual en la salida con puntos grisáceos que cambian a verde.
+RQF5 : El sistema debe mantener la salida inactiva hasta recolectar todos los coleccionables.	
+RQF6 : El sistema debe activar la salida una vez que todos los coleccionables sean recolectados.	
+RQF7 : El jugador debe poder reiniciar el intento actual presionando la tecla R.	
+RQF8 : El jugador debe poder pausar el juego presionando la tecla ESC.	
+RQF9 : El sistema debe cargar automáticamente el fondo del nivel desde Resources/Canvas_Fondo.	RQNF9 : El fondo cargado automáticamente debe usar la cámara actual.
+RQF10 : El sistema debe asegurar que el fondo cargado tenga sorting order -100.	
+MÓDULO 2: CONTROLES DEL JUGADOR
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF11 : El jugador debe desplazarse a la izquierda y derecha usando ← y →.	RQNF11 : Entradas procesadas en Update(); normalizar vectores para evitar favorecer diagonales.
+RQF12 : El jugador debe apuntar la dirección del poder con las teclas ↑ y ↓.
+RQF13 : El jugador debe saltar con Z, siempre que esté en el suelo o en "coyote time".	RQNF13 : Usar Rigidbody2D.linearVelocity en lugar de AddForce().
+RQF14 : El jugador debe usar el poder seleccionado con la tecla X.	
+RQF15 : El jugador debe cambiar el poder seleccionado manteniendo C y usando ← o →.	
+RQF16 : El jugador debe mantener presionada C para visualizar la descripción del poder.	
+RQF17 : El sistema debe responder a entradas solo cuando Time.timeScale != 0.	
+RQF18 : El salto debe usar un "coyote time" de 0.15 segundos.	
+RQF19 : El movimiento horizontal debe tener una velocidad consistente.
+RQF20 : El sistema debe controlar el salto mediante JumpForce aplicado al Rigidbody2D.linearVelocity.
+MÓDULO 3: PLATAFORMAS Y ELEMENTOS DEL NIVEL
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF21 : Las plataformas "Estático" no deben poder ser movidas ni alteradas.	
+RQF22 : Las plataformas "Estático" deben incluir puntos de entrada y salida.	
+RQF23 : Las plataformas de "Enganche" deben ser inmóviles por defecto.	
+RQF24 : "Enganche" se mueve solo si un poder específico lo define.	
+RQF25 : "Enganche" debe estar completamente rellena en el interior en diseño.	
+RQF26 : El sistema debe aplicar gravedad a las plataformas de "Desenganche".	
+RQF27 : El jugador debe poder mover "Desenganche" mediante contacto o poderes.	
+RQF28 : "Desenganche" desaparece si cae fuera de los límites.	
+RQF29 : "Desenganche" debe tener interior roto y exterior pintado.	
+RQF30 : El sistema debe iniciar proceso de quebrantamiento en 3 fases al interactuar con "Frágil".	
+RQF31 : Cada fase de quebrantamiento debe durar 2 segundos.	
+RQF32 : El sistema debe mostrar visualmente el progreso de las 3 fases de quebrantamiento.	
+RQF33 : El sistema debe aplicar vibraciones visuales durante el quebrantamiento final.	
+RQF34 : El sistema debe convertir plataforma "Frágil" en "Desenganche" al terminar.	
+RQF35 : Las plataformas "Frágiles" deben tener un relleno interior quebrantado en diseño.	
+RQF36 : El sistema permite plataformas "Flotantes" movidas por el jugador/poderes según el empuje.	
+RQF37 : Las plataformas "Flotantes" vuelven a estar estáticas al terminar su recorrido.	
+RQF38 : Las plataformas "Flotantes" reciben impulsos sin aplicarse gravedad durante su movimiento.	
+RQF39 : Las plataformas "Flotantes" deben tener un tono más oscuro que el color exterior en diseño.	
+RQF40 : El sistema asegura que un coleccionable se marca como "tomado" cuando el jugador lo toca físicamente.	
+RQF41 : El sistema asegura que un coleccionable se procesa si el jugador lo saca de los límites.    RQNF41 : El sistema debe usar script que detecte salida mediante OnTriggerEnter2D o OnCollisionEnter2D.
+RQF42 : El sistema muestra los coleccionables no recolectados con color "grisáceo" en la salida.	
+RQF43 : El sistema muestra los coleccionables recolectados con color "verde" en la salida.	
+RQF44 : Los coleccionables deben ser entidades de 1×1 celdas.	
+RQF45 : Los coleccionables deben tener estado "flotante" inalterable.	
+MÓDULO 4: SISTEMA DE ETIQUETAS
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF46 : El sistema debe emplear sistema de etiquetado para clasificar "poderes" y "niveles".	RQNF46 : Deben ser strings case-insensitive, usando enums o constantes (TipoEtiqueta).
+RQF47 : Usar etiquetas en los poderes para describir el tipo de problema a resolver.	
+RQF48 : Usar etiquetas en los niveles para señalar desafíos principales.	
+RQF49 : Implementar etiqueta "Horizontal" para poderes de desplazamiento lateral.	
+RQF50 : Implementar etiqueta "Vertical" para desplazamiento vertical o alcance.	
+RQF51 : Implementar etiqueta "general" para niveles que combinan ambos desafíos.	
+RQF52 : Implementar etiqueta "new_gravedad" para alteraciones de gravedad.	
+RQF53 : Implementar etiqueta "impulsar" para acciones de empuje.	
+RQF54 : Implementar etiqueta "crear_plataforma" para poderes generadores.	
+RQF55 : Implementar etiqueta "cruzar_abismo" para espacios largos.	
+RQF56 : Implementar etiqueta "teletransportacion" para cambios de posición guardada.	
+RQF57 : Implementar etiqueta "único" para poderes de un solo uso.	
+RQF58 : Implementar etiqueta "medidor" para poderes de carga en uso continuo.	
+RQF59 : Implementar etiqueta "varios{3-5}" para poderes con usos múltiples definidos.	
+RQF60 : Mantener un diccionario de relaciones en LogicaPoderes.Relaciones.	
+MÓDULO 5: INTERFAZ E INDICADORES VISUALES
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF61 : El sistema debe mostrar el poder actual en la esquina inferior derecha.	RQNF61 : La ruleta de poder debe cubrir un área de 4×5 celdas.
+RQF62 : El usuario debe mantener presionada la tecla C para expandir la interfaz.	RQNF62 : El sistema debe usar animadores/Canvas groups para la transición.
+RQF63 : El sistema debe expandir la interfaz si se presiona por más de 2 segundos.	RQNF63 : El sistema debe expandir suavemente (transición de escala durante 2 segundos); cubre 8x10 celdas.
+RQF64 : El sistema debe mostrar la descripción del poder seleccionado al expandir.	
+RQF65 : El usuario puede navegar descripciones con izquierda/derecha mientras está expandida.	RQNF65 : El cambio debe ser instantáneo sin desplazamiento de menú.
+RQF66 : El sistema debe mostrar progreso de los 9 niveles en la parte superior central.	RQNF66 : El sistema debe mostrar la información como GRIS (faltantes), AZUL (actual), VERDE (superados) sin explicación explícita.
+RQF67 : El sistema debe mostrar indicadores de los usos restantes sobre el personaje.	
+RQF68 : El sistema debe mostrar círculos azules que desaparecen con cada uso ("varios").	
+RQF69 : El sistema debe mostrar un medidor horizontal que se consume durante el uso ("medidor").	
+RQF70 : El sistema debe de mostrar todos los círculos en gris si ya no hay usos.	
+RQF71 : El sistema debe ocultar el panel de poderes en el tutorial.	
+RQF72 : El sistema debe Actualizar el icono y cargas en el HUD al cambiar o usar el poder.	
+MÓDULO 6: ALGORITMO DE EVALUACIÓN DE DESEMPEÑO (SKILL)
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF73 : El sistema debe implementar algoritmo para evaluar el desempeño en cada nivel.	
+RQF74 : El sistema debe modificar condiciones y selección de niveles futuros basado en el "skill score".    RQNF74 : El cambio de estado debe ser instantáneo al terminar.
+RQF75 : El sistema gestiona un "Skill score" numérico de 0 a 100.	RQNF75 : Acotado entre 0 y 100 sin permitir valores negativos o mayores.
+RQF76 : Iniciar con un "Skill score" de 50 al comenzar una partida.	
+RQF77 : Calcular PuntuacionNivel según Intentos, Poderes y Tiempo.	RQNF77 : Guardar el historial de skill scores por nivel para análisis.
+RQF78 : Asignar +10 puntos por terminar en el primer intento.	RQNF78 : Puntuación de intentos debe ser entero entre -10 y +10.
+RQF79 : Asignar +5 puntos por terminar en el 2do o 3er intento.	
+RQF80 : Asignar +0 puntos por terminar en el 4to o 5to intento.	
+RQF81 : Asignar -5 puntos por terminar en el 6to, 7mo u 8vo intento.	
+RQF82 : Asignar -10 puntos por terminar en el 9no intento o superior.	
+RQF83 : Asignar +10 puntos por terminar un nivel sin usar poderes.	RQNF83 : Puntuación de poderes debe ser entero entre -5 y +10.
+RQF84 : Asignar +0 puntos si se usaron de 1 a 2 poderes.	
+RQF85 : Asignar -5 puntos si hubo dependencia de un solo poder.	
+RQF86 : Asignar +5 puntos si se acabó en menos de 1 minuto.	RQNF86 : Puntuación de tiempo debe ser entero entre -5 y +5.
+RQF87 : Asignar +0 puntos si se acabó entre 1 y 2 minutos.	
+RQF88 : Asignar -5 puntos si se acabó en más de 2 minutos.	
+RQF89 : Calcular NuevaSkill = (SkillActual * 0.7) + (PuntuacionNivel * 0.3).	RQNF89 : Redondear a un decimal para evitar precisión excesiva.
+RQF90 : Activar estado "issue" si NuevaSkill < 35.	
+RQF91 : Activar estado "based" si NuevaSkill está entre 35 y 65.	
+RQF92 : Activar estado "solution" si NuevaSkill > 65.	
+RQF93 : (En "issue") Reducir plataformas frágiles en niveles futuros.	
+RQF94 : (En "issue") Aumentar aparición de poderes con los que más se ganó.	
+RQF95 : (En "solution") Aumentar plataformas frágiles en niveles futuros.	
+RQF96 : (En "solution") Reducir aparición de poderes ganadores, aumentar condiciones.	
+RQF97 : Mantener un historial de poderes usados durante la partida.	
+MÓDULO 7: REGISTRO Y EJECUCIÓN DE EVENTOS
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF98 : Crear un registro temporal al iniciar un nivel.	RQNF98 : Debe ser una estructura o clase instanciada por nivel.
+RQF99 : El registro temporal debe incluir un contador de "Intentos".	RQNF99 : El contador debe ser de tipo entero no negativo.
+RQF100 : El registro temporal debe incluir un contador de "Tiempo".	RQNF100 : Usar Time.deltaTime acumulado, no Time.timeSinceLevelLoad.
+RQF101 : El registro temporal debe incluir un contador de "Uso de poderes".	RQNF101 : El contador debe ser de tipo entero no negativo.
+RQF102 : El sistema debe calcular la PuntuacionNivel al completar el nivel.	
+RQF103 : El sistema debe calcular la NuevaSkill al completar el nivel.	
+RQF104 : El sistema Actualiza el estado global del jugador (Issue, Based, Solution).	
+RQF105 : El sistema debe Comunicar estado al sistema de modificación de layout.	
+RQF106 : El sistema debe Comunicar estado al sistema de ajuste de poderes/condiciones.	
+RQF107 : El sistema Reinicia los contadores temporales al pasar al siguiente nivel.	
+RQF108 : El sistema Incrementa el contador de intentos al iniciar intento desde re-roll.	
+RQF109 : El sistema registra tiempo total incluyendo tiempo en pantalla re-roll/lock.	
+RQF110 : El sistema registra uso de poder cada vez que el jugador lo ejecuta en el nivel.	
+MÓDULO 8: SELECCIÓN INICIAL DE PODERES Y NIVELES
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF111 : Seleccionar aleatoriamente 9 poderes de los 15 totales al inicio de partida normal.	RQNF111 : Registrar el conjunto de 9 poderes en Logic_Manager.mazoJugador.
+RQF112 : Asegurar que los 6 poderes no seleccionados no aparezcan durante esa partida.	
+RQF113 : Validar el conjunto de 9 poderes contra todos los layouts predefinidos.	RQNF113 : El proceso debe completarse antes de permitir la entrada del jugador.
+RQF114 : Layout "válido" solo si contiene al menos 4 poderes compatibles con las etiquetas.	RQNF114 : El diccionario de compatibilidad debe calcularse usando etiquetas.
+RQF115 : Descartar y generar un nuevo conjunto de poderes si un pool de niveles queda en 0.	
+RQF116 : Seleccionar 9 niveles priorizando aquellos con "Puntaje de Compatibilidad" alto.	RQNF116 : Guardar conjunto de niveles en LevelLoader.nivelesDeEstaPartida.
+RQF117 : Seleccionar al azar entre niveles si existe un empate en compatibilidad.	
+MÓDULO 9: SISTEMA DE RE-ROLL Y LOCK
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF118 : Activarse únicamente en la pantalla de selección de poderes antes de iniciar nivel.	
+RQF119 : Asignar aleatoriamente 3 poderes iniciales (sin repetir) de los 9 disponibles.	RQNF119 : Usar Random.Range() con exclusión de ya seleccionados.
+RQF120 : Navegar entre los 3 poderes seleccionados usando las teclas ← y →.	
+RQF121 : "Bloquear" (Lock) un poder seleccionado usando la tecla X.	RQNF121 : Estado persistente en array booleano; mostrar visualmente los bloqueados.
+RQF122 : Impedir que los poderes bloqueados sean modificados por un re-roll.	
+RQF123 : "Re-rolear" poderes no bloqueados usando la tecla R, consumiendo un uso.	RQNF123 : El re-roll debe ser instantáneo sin animación de espera.
+RQF124 : Iniciar el intento con los 3 poderes seleccionados usando la tecla Z.	
+RQF125 : Otorgar al jugador 11 "intentos" por nivel.	RQNF125 : Los contadores de intentos deben ser enteros no negativos.
+RQF126 : Declarar una pérdida (regreso al menú) si los "intentos" llegan a 0.	
+RQF127 : Reiniciar los "intentos" a 11 al pasar al siguiente nivel.	
+RQF128 : Otorgar al jugador 2 "re-rolls" por intento.	RQNF128 : Los contadores de re-rolls deben ser enteros no negativos.
+RQF129 : Reiniciar los "re-rolls" a 2 en el siguiente intento o nivel.	
+RQF130 : Mantener los poderes bloqueados (Lock) entre intentos del mismo nivel.	
+RQF131 : Quitar todos "Lock" al avanzar al siguiente nivel.	
+RQF132 : Mostrar información de intentos restantes y re-rolls disponibles.	
+RQF133 : En "issue", aumentar probabilidad de los 3 poderes con los que más ha ganado.	RQNF133 : Las probabilidades ajustadas deben usar pesos normalizados.
+RQF134 : En "solution", reducir en 25% la probabilidad de los 3 poderes más ganadores.	
+RQF135 : En "solution", aumentar en 10% probabilidad de 3 poderes con los que menos ha ganado.	
+RQF136 : Desempate azaroso si existe empate en el conteo de usos para ajustar probabilidades.	
+MÓDULO 10: PROGRESIÓN POR FASES Y CONDICIONES
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF137 : Utilizar layouts de nivel prefabricados, no generados aleatoriamente.	
+RQF138 : Disponer de 11 layouts predefinidos para los niveles del 1 al 3.	RQNF138 : Usar cámara fija de 16×29 celdas y distribución porcentual específica.
+RQF139 : Disponer de 9 layouts predefinidos para los niveles 4 al 6.	
+RQF140 : Disponer de 8 layouts predefinidos para los niveles 7 y 8.	
+RQF141 : Disponer de 5 layouts predefinidos para el nivel 9.
+RQF142 : El sistema divide cada conjunto en 3 fases de dificultad.
+RQF143 : El sistema asigna al jugador a una fase basándose en la progresión de nivel global y no directamente en el "Skill score".
+RQF144 : El algoritmo Skill debe determinar condiciones y pesos de selección basándose en intentos, poderes y tiempo.
+RQF145 : El sistema debe Asegurar que cada fase contiene la misma cantidad de layouts.
+RQF146 : Diferentes fases deben tener variaciones en complejidad y obstáculos.	
+RQF147 : Mantener el objetivo de tomar coleccionables y llegar a la salida en todos los niveles.	
+RQF148 : Introducir "Condiciones" (modificadores aleatorios) en los niveles 4-6.	RQNF148 : Deben aparecer según la probabilidad dada por la skill.
+RQF149 : Mostrar las Condiciones activas en la pantalla de re-roll y lock.	
+RQF150 : Implementar condición "Con las reglas de la casa" (sin poder cambiar poderes).	
+RQF151 : Implementar condición "X poder lo debes tener" (fija poder con lock obligatorio).	
+RQF152 : Implementar condición "el monitor está fallando..." (oculta identidad de poderes).	
+RQF153 : Implementar condición "no te acabes por completo los poderes" (requiere dejar uso).	
+RQF154 : Escalar la probabilidad de Condiciones con el "Skill score" (0% a <60, hasta 50% a 100).	
+MÓDULO 11: MECÁNICA DE CAJAS DE PODERES
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF155 : Incluir 3 "cajas de poderes" en los niveles 7 y 8.	RQNF155 : Las cajas deben ser GameObjects con collider trigger.
+RQF156 : Incluir 6 "cajas de poderes" en el nivel 9.	
+RQF157 : Las cajas deben contener un poder de los 9 elegidos al inicio de la partida.	
+RQF158 : Intercambiar poder actual con el de la caja al tocarla.	RQNF158 : Intercambio instantáneo sin animación.
+RQF159 : Cambiar aleatoriamente el poder contenido si el jugador pierde el intento.	
+RQF160 : El jugador debe poder usar todos sus poderes a través de cajas en el nivel 9.	RQNF160 : Evitar cajas con poderes duplicados en el mismo nivel.
+MÓDULO 12: SISTEMA DE TEMPORIZACIÓN Y PUNTUACIÓN FINAL
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF161 : Iniciar un temporizador global de partida al iniciar el nivel 1.	RQNF161 : El temporizador debe estar en formato HH:MM:SS.
+RQF162 : Detener el temporizador permanentemente al completar el Nivel 9.	
+RQF163 : El tiempo en pantalla de "Re-roll y Lock" debe incluirse en el tiempo total.	RQNF163 : El tiempo debe ser preciso usando Time.deltaTime acumulado.
+RQF164 : El temporizador global solo debe pausarse en el menú de pausa.	
+RQF165 : Acumular un "Puntaje Total" a lo largo de los 9 niveles.	RQNF165 : El puntaje total debe ser un entero no negativo.
+RQF166 : Otorgar +3 puntos si se completó el nivel en el primer intento.	RQNF166 : Los bonos deben sumarse de forma clara y transparente.
+RQF167 : Otorgar +2 puntos si se completó en el segundo o tercer intento.	
+RQF168 : Otorgar +1 punto si se completó en el cuarto o quinto intento.	
+RQF169 : Bono de +1 punto si el nivel se completa en menos de 30 segundos.	
+RQF170 : Bono de +4 puntos si el nivel se completa sin gastar más de un poder.	
+RQF171 : Bono de +1 punto si un nivel se completa con una "Condición" activa.	
+RQF172 : Mostrar una pantalla de resumen final al completar el Nivel 9.	
+RQF173 : Mostrar "Tiempo Total", "Mejor Tiempo", "Puntaje Total" y "Mejor Puntaje".	
+RQF174 : Actualizar "Mejor Tiempo Guardado" si el Tiempo Total es menor.	RQNF174 : Usar PlayerPrefs o similar para guardar mejores tiempos/puntajes.
+RQF175 : Actualizar "Mejor Puntaje Guardado" si el Puntaje Total es mayor.	
+RQF176 : Mostrar mensajes de hitos para justificar los puntos de bono obtenidos.	
+MÓDULO 13: APÉNDICE DE PODERES
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF177 : Implementar "Plataforma Estática" (crea plataforma enganche en el aire).	RQNF177 : Todos los poderes deben tener un script en el jugador.
+RQF178 : El poder "Plataforma Estática" debe tener 3 usos.	RQNF178 : Registrar uso en SkillManager; campo cargasRestantes accesible.
+RQF179 : Crear una plataforma de tamaño 1×1 celdas.	
+RQF180 : Implementar "Impulso" (genera impulso en la dirección apuntada).	
+RQF181 : El poder "Impulso" debe tener 5 usos.	
+RQF182 : Implementar "G-Inversor" (invierte la gravedad del jugador).	RQNF182 : Respetar Time.timeScale para no funcionar en pausa.
+RQF183 : Limitarse a un medidor de energía mientras se mantiene presionado.	RQNF183 : Los poderes continuos deben usar corrutinas.
+RQF184 : El poder "G-Inversor" debe ser continuo.	
+RQF185 : Implementar "EmbestiFresa" (dash en cualquier dirección).	RQNF185 : Soportar 8 direcciones usando input de ejes.
+RQF186 : El poder debe tener 5 usos.	
+RQF187 : Permitir movimiento en 8 direcciones.	
+RQF188 : Implementar "Mochila de Cocas" (descender lentamente al jugador).	
+RQF189 : El poder debe estar limitado por un medidor de energía.	
+RQF190 : El poder debe ser continuo mientras se mantiene presionado.	
+RQF191 : Implementar "Coca Agitada" (da un impulso vertical lento).	
+RQF192 : Permitir movimiento lateral durante el impulso.	
+RQF193 : El poder "Coca Agitada" debe tener 3 usos.	
+RQF194 : Recorrer 5 celdas de distancia.	
+RQF195 : Frenar en seco al jugador si está cayendo y elevarlo.	
+RQF196 : Implementar "Desplazador" (crea área que mueve objetos).	
+RQF197 : El poder "Desplazador" debe tener un solo uso.	
+RQF198 : Anular el efecto de "dash", "mochila", "coca agitada" e "inversor" en su área.	
+RQF199 : Implementar "Cubo Repulsor" (coloca un cubo repulsor).	
+RQF200 : El poder "Cubo Repulsor" debe tener un solo uso.	
+RQF201 : El cubo debe repeler al jugador al tocarlo.	
+RQF202 : Implementar "Gel Adherente" (permite pintar una superficie vertical).	
+RQF203 : Permitir caminar sobre ella temporalmente.	
+RQF204 : El poder "Gel Adherente" debe tener 4 usos.	
+RQF205 : El gel debe durar 10 segundos después de su uso.	
+RQF206 : Implementar "Paso Sombra" (marca la posición actual).	
+RQF207 : Permitir regresar a esa posición una vez.	
+RQF208 : El poder "Paso Sombra" debe tener un solo uso.	
+RQF209 : Activar presionando la tecla de uso o saliéndose de los límites.	
+RQF210 : Implementar "Imán" (lanza un imán que atrae plataformas).	
+RQF211 : El poder "Imán" debe tener 3 usos.	
+RQF212 : Recorrer distancia de 6 celdas salvo que haya plataforma compatible.	
+RQF213 : No gastar uso si toca plataforma "estático" o si no toca nada.	
+RQF214 : Convertir plataforma de "enganche" en "flotante" al tocarla.	
+RQF215 : Atraer plataformas "enganche", "desenganche" y "flotantes".	
+RQF216 : Implementar "Reseteo Local" (devuelve el layout a su estado inicial).	
+RQF217 : El poder "Reseteo Local" debe tener un solo uso.	
+RQF218 : No debe restaurar los usos de otros poderes.	
+RQF219 : Implementar "Error de Código" (intercambia posición de salida y entrada).	
+RQF220 : El poder "Error de Código" debe tener un solo uso.	
+RQF221 : Implementar "Brújula Gravitacional" (cambia la gravedad global).	RQNF221 : Las plataformas deben ser afectadas por cambios de gravedad.
+RQF222 : El poder "Brújula Gravitacional" debe tener un solo uso.	
+RQF223 : Elevar al jugador hacia la dirección contraria.	
+RQF224 : Elevar al jugador hasta tocar los límites o una plataforma.	
+RQF225 : Hacer aparecer una flecha en la dirección apuntada.	
+RQF226 : Continuar elevando al jugador en niveles donde la cámara se mueve.	
+RQF227 : El sistema debe asegurar de no morir si sale fuera de límites con la gravedad cambiada.	RQNF227 : Reaparecer en plataforma de entrada si pierde.
+RQF228 : Implementar "Singularidad" (elimina objetos en un área designada).	
+RQF229 : El poder "Singularidad" debe tener 3 usos.	
+RQF230 : El sistema debe mostrar una “o" a 3 celdas de distancia en la dirección apuntada.	
+RQF231 : El sistema debe asegurar que el poder solo apunta en 4 puntos cardinales.	
+RQF232 : El sistema debe eliminar todo en un área encima de la "o".	
+RQF233 : El sistema asegura no eliminar la salida ni la entrada con sus plataformas.	
+MÓDULO 14: PAUSA Y CONTROL DE TIEMPO
+Requerimiento Funcional	Requerimiento No Funcional asociado
+RQF234 : El jugador debe pausar y reanudar el juego con la tecla ESC.	RQNF234 : La pausa debe establecer Time.timeScale = 0 y al reanudar 1.
+RQF235 : El sistema debe mostrar un menú de pausa cuando está pausado.	RQNF235 : El menú debe estar en una escena o canvas separado.
+RQF236 : Permitir reiniciar el nivel desde la pausa con la tecla R.	RQNF236 : El reinicio debe recargar la escena actual sin cambiar de nivel.
+RQF237 : El sistema debe ocultar el menú de pausa al reanudar.	
+

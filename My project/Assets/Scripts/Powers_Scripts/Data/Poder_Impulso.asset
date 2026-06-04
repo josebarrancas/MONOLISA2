@@ -15,7 +15,8 @@ MonoBehaviour:
   nombre: Impulso
   explicacion: lanza bloques y monedas a donde mires
   icono: {fileID: -416060295633103605, guid: 262236bb05f23cf42bc9bb64334b08de, type: 3}
-  etiquetas: []
+  etiquetas:
+  - Impulsar
   tipo: 1
   cantidadUsos: 5
   cargaMedidor: 0

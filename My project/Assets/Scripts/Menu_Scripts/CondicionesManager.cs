@@ -55,11 +55,11 @@ public class CondicionesManager : MonoBehaviour
 
     public int CalcularProbabilidad(float skill)
     {
-        // MODO PRUEBA
+        
          if (skill < 60f) return 0;
 
         // Todo al 100% para que siempre caiga una mutación
-        if (skill >= 0f && skill < 70f) return 10; // <- Modificado aquí para abarcar desde 0
+        if (skill >= 60f && skill < 70f) return 10; 
         if (skill >= 70f && skill < 80f) return 20;
         if (skill >= 80f && skill < 90f) return 30;
         if (skill >= 90f && skill < 100f) return 40;

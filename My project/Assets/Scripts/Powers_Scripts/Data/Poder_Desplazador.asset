@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_Desplazador
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Desplazador
-  explicacion: 
+  explicacion: mueve todo lo que se encuentre en su rango
   icono: {fileID: 2789923931394953461, guid: 526cc6d63a79e7941bb1995087e29d02, type: 3}
   etiquetas:
   - General

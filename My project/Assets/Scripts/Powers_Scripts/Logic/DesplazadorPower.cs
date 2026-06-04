@@ -17,5 +17,8 @@ public class DesplazadorPower : MonoBehaviour
         }
     }
 
-    public void ResetearCargas() { cargasRestantes = 1; }
+    public void ResetearCargas()
+    {
+        cargasRestantes = 1;
+    }
 }

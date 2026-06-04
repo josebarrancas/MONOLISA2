@@ -15,6 +15,8 @@ public class Movimiento : MonoBehaviour
     [HideInInspector] public bool enZonaDesplazador = false;
     private bool solicitarSalto = false;
 
+    private Vector3 posicionInicialNivel;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,16 +24,15 @@ public class Movimiento : MonoBehaviour
         embestifresa = GetComponent<EmbestifresaPower>();
         Physics2D.gravity = new Vector2(0, -9.81f);
 
-        
+        posicionInicialNivel = transform.position;
+
         CargarCanvasFondoAutomatico();
     }
 
     private void CargarCanvasFondoAutomatico()
     {
-        
         if (GameObject.Find("Canvas_Fondo(Clone)") == null && GameObject.Find("Canvas_Fondo") == null)
         {
-           
             GameObject prefabFondo = Resources.Load<GameObject>("Canvas_Fondo");
 
             if (prefabFondo != null)
@@ -39,24 +40,19 @@ public class Movimiento : MonoBehaviour
                 GameObject fondoInstanciado = Instantiate(prefabFondo);
                 fondoInstanciado.transform.position = Vector3.zero;
 
-                // 1. BUSCAMOS LA CÁMARA ACTIVA DE ESTA ESCENA
                 Camera camaraActual = Camera.main;
 
-                // Por si acaso no la tienes etiquetada como MainCamera, buscamos cualquier cámara funcional
                 if (camaraActual == null)
                 {
                     camaraActual = FindObjectOfType<Camera>();
                 }
 
-                
                 if (camaraActual != null)
                 {
                     Canvas canvasComponent = fondoInstanciado.GetComponent<Canvas>();
                     if (canvasComponent != null)
                     {
                         canvasComponent.worldCamera = camaraActual;
-
-                        // Opcional: Aseguramos por código que se vaya al fondo del todo
                         canvasComponent.sortingOrder = -100;
                     }
                 }
@@ -125,18 +121,65 @@ public class Movimiento : MonoBehaviour
     {
         if (collision.CompareTag("Dead"))
         {
+            // Candado de la Brújula Gravitacional
+            if (Physics2D.gravity != new Vector2(0, -9.81f))
+            {
+                return;
+            }
+
             string escenaActual = SceneManager.GetActiveScene().name;
 
-            if (escenaActual == "Tutorial")
+            if (escenaActual == "Tutorial" || escenaActual == "Lvl_Based_Tutorial")
             {
                 SceneManager.LoadScene(escenaActual);
             }
             else
             {
                 if (SkillManager.Instance != null)
+                {
                     SkillManager.Instance.intentosNivel++;
 
-                // Regresamos a la selección para re-intentar con los mismos índices
+                    // --- REINICIO AUTOMÁTICO POR EXCESO DE MUERTES (>10) ---
+                    if (SkillManager.Instance.intentosNivel > 10)
+                    {
+                        Debug.Log("<color=red>[GAME OVER]</color> El jugador murió más de 10 veces. Ejecutando Hard Reset...");
+
+                        // 1. Limpiar el archivo .txt para que no se hereden tiempos ni scores viejos
+                        var datos = ManejadorGuardadoTexto.CargarDatos();
+                        ManejadorGuardadoTexto.GuardarDatos(
+                            0f,
+                            datos.recordMejorTiempoNormal,
+                            0,
+                            datos.recordMejorPuntajeNormal
+                        );
+
+                        // 2. Reiniciar los índices del LevelLoader si existe en escena antes de destruirlo
+                        if (LevelLoader.Instance != null)
+                        {
+                            LevelLoader.Instance.nivelGlobal = 0;
+                            LevelLoader.Instance.nivelActualIndice = 0;
+                        }
+
+                        // 3. DETONACIÓN DE MEMORIA RAM (Eliminamos todas las instancias persistentes acumuladas)
+                        if (SkillManager.Instance != null) Destroy(SkillManager.Instance.gameObject);
+                        if (LevelLoader.Instance != null) Destroy(LevelLoader.Instance.gameObject);
+
+                        var logicManager = FindObjectOfType<Logic_Manager>();
+                        if (logicManager != null) Destroy(logicManager.gameObject);
+
+                        var condicionesManager = FindObjectOfType<CondicionesManager>();
+                        if (condicionesManager != null) Destroy(condicionesManager.gameObject);
+
+                        var reRollManager = FindObjectOfType<ReRollManager>();
+                        if (reRollManager != null) Destroy(reRollManager.gameObject);
+
+                        // 4. Carga nativa del Tutorial desde cero
+                        SceneManager.LoadScene("Lvl_Based_Tutorial");
+                        return;
+                    }
+                }
+
+                // Si no ha superado las 10 muertes, sigue el flujo normal a la selección
                 SceneManager.LoadScene("Pantalla_Seleccion");
             }
         }

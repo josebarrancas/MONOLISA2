@@ -11,7 +11,7 @@ public class GelAdherenteLogic : MonoBehaviour
 
     void Start()
     {
-        // El objeto se autodestruirá cuando pasen los 8 segundos
+        // Autodestrucción a los 8 segundos
         Destroy(gameObject, tiempoDeVida);
     }
 
@@ -29,14 +29,30 @@ public class GelAdherenteLogic : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D col)
     {
-        // Usamos OnTriggerStay para forzar la gravedad a 0 constantemente.
-        // Así evitamos que dos manchas juntas se peleen por el control.
         if (jugadorEnGel && playerRb != null)
         {
-            playerRb.gravityScale = 0f;
+            // 1. DETECCIÓN DE SALTO INFALIBLE
+            // Calculamos su velocidad vertical respecto a su rotación
+            float velYLocal = Vector2.Dot(playerRb.linearVelocity, playerRb.transform.up);
 
+            // Si la velocidad es mucho mayor que la escalada, significa que presionó salto.
+            if (velYLocal > velocidadEscalada + 1f)
+            {
+                // Dejamos de actuar y permitimos que la física de su salto siga su curso normal
+                return;
+            }
+
+            // 2. ESCALADA ESTABLE (Sin tocar el gravityScale)
+            // Leemos el input del jugador (1, 0, o -1)
             float inputVertical = Input.GetAxisRaw("Vertical");
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, inputVertical * velocidadEscalada);
+
+            // Calculamos hacia dónde es "arriba" para el jugador (soporte G-Inversor)
+            Vector2 direccionArriba = playerRb.transform.up;
+
+            // Sobrescribimos su eje Y para vencer a la gravedad con puro motor, sin apagarla
+            Vector2 empujeVertical = direccionArriba * (inputVertical * velocidadEscalada);
+
+            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, empujeVertical.y);
         }
     }
 
@@ -44,37 +60,14 @@ public class GelAdherenteLogic : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            SoltarJugador();
+            // Simplemente lo soltamos, la gravedad hará el resto porque nunca la apagamos
+            jugadorEnGel = false;
+            playerRb = null;
         }
     }
 
     private void OnDestroy()
     {
-        if (jugadorEnGel)
-        {
-            SoltarJugador();
-        }
-    }
-
-    private void SoltarJugador()
-    {
-        if (playerRb != null)
-        {
-            // 1. FRENADO: Matamos la inercia vertical para que no salga volando
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
-
-            // 2. GRAVEDAD SEGURA: Restauramos a 5 (o -5 si el G-Inversor está activo)
-            float gravedadRestaurar = 5f;
-
-            GInversorPower inversor = playerRb.GetComponent<GInversorPower>();
-            if (inversor != null && inversor.estaInvertido)
-            {
-                gravedadRestaurar = -5f; // Cae hacia el techo
-            }
-
-            playerRb.gravityScale = gravedadRestaurar;
-        }
-
         jugadorEnGel = false;
         playerRb = null;
     }

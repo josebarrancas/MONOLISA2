@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8552282916130430764}
   m_Layer: 3
   m_Name: variedad_bloquest_1
-  m_TagString: desenganche
+  m_TagString: enganche
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

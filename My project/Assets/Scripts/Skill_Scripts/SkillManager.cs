@@ -12,7 +12,7 @@ public class SkillManager : MonoBehaviour
 
     [Header("Métricas del Nivel (Debug)")]
     public int intentosNivel = 1;
-    public float tiempoNivel = 0f; // NUEVO: Cronómetro propio
+    public float tiempoNivel = 0f;
     public int poderesUtilizados = 0;
 
     private bool cronometroActivo = false;
@@ -36,21 +36,17 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    // --- EL SECRETO: ESCUCHAR LOS CAMBIOS DE ESCENA ---
     void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
     void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Si estamos en un menú, pausamos el tiempo
         if (scene.name == "Pantalla_Seleccion" || scene.name == "Hub")
         {
             cronometroActivo = false;
         }
         else
         {
-            // Si entramos a un nivel jugable, es un NUEVO intento.
-            // Limpiamos los poderes y el tiempo de este intento específico.
             tiempoNivel = 0f;
             poderesUtilizados = 0;
             cronometroActivo = true;
@@ -61,7 +57,6 @@ public class SkillManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F3)) mostrarDebugUI = !mostrarDebugUI;
 
-        // El tiempo SOLO avanza si el cronómetro está activo
         if (cronometroActivo)
         {
             tiempoNivel += Time.deltaTime;
@@ -79,7 +74,6 @@ public class SkillManager : MonoBehaviour
 
     public void CalcularResultados()
     {
-        // Ya no usamos Time.time, usamos nuestro cronómetro perfecto
         float tiempoFinal = tiempoNivel;
 
         int pIntentos = 0;
@@ -109,8 +103,19 @@ public class SkillManager : MonoBehaviour
         else if (skillActual > 70) estadoActual = "Solution";
         else estadoActual = "Based";
 
-        // Al ganar, reiniciamos los intentos para prepararnos para el SIGUIENTE nivel
         intentosNivel = 1;
+    }
+
+    // --- NUEVO MÉTODO CORREGIDO PARA EL REINICIO DESDE LA PANTALLA FINAL ---
+    public void ResetearSkillCompletamente()
+    {
+        skillActual = 50f;
+        estadoActual = "Based";
+        intentosNivel = 1; // Tu estado inicial de intentos según tu lógica
+        tiempoNivel = 0f;
+        poderesUtilizados = 0;
+        cronometroActivo = false;
+        historialPoderes.Clear();
     }
 
     // --- UI DE DEBUG ---
@@ -133,7 +138,6 @@ public class SkillManager : MonoBehaviour
         estiloTexto.richText = true;
         estiloTexto.padding = new RectOffset(15, 15, 40, 15);
 
-        // Usamos tiempoNivel en lugar del cálculo antiguo
         string info = $"\n" +
                       $"Intento Actual: <b>{intentosNivel}</b>\n" +
                       $"Tiempo: <b>{tiempoNivel:F1} seg</b>\n" +

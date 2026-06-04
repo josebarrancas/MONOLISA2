@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Poder_Singularidad
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Singularidad
-  explicacion: 
+  explicacion: elimina lo que este en rango
   icono: {fileID: 3589427961894684663, guid: 8ed7a83c8de58804690bfbdcc32a3f2e, type: 3}
   etiquetas:
   - General

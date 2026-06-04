@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: poder_ErrorDeCodigo
   m_EditorClassIdentifier: Assembly-CSharp::PoderData
   nombre: Error de codigo
-  explicacion: 
+  explicacion: intercambia la salida y la entrada
   icono: {fileID: -4356433154330858415, guid: f1560ccf9299b014a80bba83e780ecdf, type: 3}
   etiquetas:
   - general

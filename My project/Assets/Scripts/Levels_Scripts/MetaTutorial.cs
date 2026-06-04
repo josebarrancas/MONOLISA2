@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Encargado de detectar el fin del tutorial y disparar el inicio 
-/// de la primera ronda real (Fase 1).
+/// de la primera ronda real (Fase 1) integrando el sistema de guardado en TXT.
 /// </summary>
 public class MetaTutorial : MonoBehaviour
 {
@@ -28,14 +28,23 @@ public class MetaTutorial : MonoBehaviour
         {
             Debug.Log("<color=cyan>MetaTutorial:</color> Tutorial completado.");
 
-            
-            PlayerPrefs.SetFloat("Partida_TiempoActual", 0f);
-            PlayerPrefs.Save();
+            // --- NUEVO SISTEMA TXT ---
+            // 1. Cargamos los datos actuales para no borrar el récord histórico
+            var datos = ManejadorGuardadoTexto.CargarDatos();
 
-           
+            // 2. Limpiamos el tiempo de la partida actual a cero para el speedrun limpio,
+            // pero mantenemos sus mejores récords de tiempo y puntaje previos intactos.
+            ManejadorGuardadoTexto.GuardarDatos(
+                0f,
+                datos.recordMejorTiempoNormal,
+                0,
+                datos.recordMejorPuntajeNormal
+            );
+
+            // 3. Encendemos el motor del reloj global en el script de pausa
             ControlarPausaMenu.CronometroActivo = true;
 
-            Debug.Log("[QA TIEMPO] ¡Meta Cruzada! Tiempo reseteado a 0 y cronómetro encendido globalmente.");
+            Debug.Log("[QA TIEMPO] ¡Meta Cruzada! Tiempo reseteado a 0 en TXT y cronómetro encendido globalmente.");
 
             LevelLoader.Instance.nivelGlobal = 0;
             LevelLoader.Instance.nivelActualIndice = 0;

@@ -25,16 +25,25 @@ public class DesplazadorLogic : MonoBehaviour
 
         foreach (var kvp in objetosAfectados)
         {
-            if (kvp.Key != null) kvp.Key.linearVelocity = direccion * velocidadOchoDirecciones;
-            else aBorrar.Add(kvp.Key);
+            if (kvp.Key != null)
+            {
+                kvp.Key.linearVelocity = direccion * velocidadOchoDirecciones;
+            }
+            else
+            {
+                aBorrar.Add(kvp.Key);
+            }
         }
 
-        foreach (var rb in aBorrar) objetosAfectados.Remove(rb);
+        foreach (var rb in aBorrar)
+        {
+            objetosAfectados.Remove(rb);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Player") || col.CompareTag("flotante") || col.CompareTag("desenganche"))
+        if (col.CompareTag("Player") || col.CompareTag("flotante") || col.CompareTag("desenganche") || col.CompareTag("enganche"))
         {
             Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
             if (rb != null && !objetosAfectados.ContainsKey(rb))
@@ -45,8 +54,11 @@ public class DesplazadorLogic : MonoBehaviour
 
                 if (col.CompareTag("Player"))
                 {
-                    col.GetComponent<Movimiento>().enZonaDesplazador = true;
-                    col.GetComponent<Controlador_Poderes>().bloqueadoPorDesplazador = true;
+                    var mov = col.GetComponent<Movimiento>();
+                    if (mov != null) mov.enZonaDesplazador = true;
+
+                    var pod = col.GetComponent<Controlador_Poderes>();
+                    if (pod != null) pod.bloqueadoPorDesplazador = true;
                 }
             }
         }
@@ -54,34 +66,51 @@ public class DesplazadorLogic : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D col)
     {
-        RestaurarObjeto(col.GetComponent<Rigidbody2D>());
+        Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            RestaurarObjeto(rb);
+        }
     }
 
     private void OnDestroy()
     {
-        foreach (var kvp in objetosAfectados)
+        // SOLUCCIÓN AL CONGELAMIENTO: Copiamos las llaves a una lista independiente 
+        // para poder vaciar el diccionario original sin romper el bucle foreach.
+        List<Rigidbody2D> temporales = new List<Rigidbody2D>(objetosAfectados.Keys);
+
+        foreach (var rb in temporales)
         {
-            if (kvp.Key != null) RestaurarObjeto(kvp.Key);
+            if (rb != null)
+            {
+                RestaurarObjeto(rb);
+            }
         }
+
+        objetosAfectados.Clear();
     }
 
     private void RestaurarObjeto(Rigidbody2D rb)
     {
         if (rb != null && objetosAfectados.ContainsKey(rb))
         {
-            // Le devolvemos su gravedad original a la normalidad
+            // Le devolvemos su gravedad original
             rb.gravityScale = objetosAfectados[rb];
 
-            // --- SOLUCIÓN AQUÍ: Frenamos el objeto en seco para matar la inercia ---
+            // Frenamos el objeto en seco para matar la inercia acumulada
             rb.linearVelocity = Vector2.zero;
-
-            objetosAfectados.Remove(rb);
 
             if (rb.CompareTag("Player"))
             {
-                rb.GetComponent<Movimiento>().enZonaDesplazador = false;
-                rb.GetComponent<Controlador_Poderes>().bloqueadoPorDesplazador = false;
+                var mov = rb.GetComponent<Movimiento>();
+                if (mov != null) mov.enZonaDesplazador = false;
+
+                var pod = rb.GetComponent<Controlador_Poderes>();
+                if (pod != null) pod.bloqueadoPorDesplazador = false;
             }
+
+            // Remoción segura
+            objetosAfectados.Remove(rb);
         }
     }
 }

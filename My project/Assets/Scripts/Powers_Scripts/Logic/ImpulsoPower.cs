@@ -9,12 +9,11 @@ public class ImpulsoPower : MonoBehaviour
     public float fuerzaPorCelda = 5f;
 
     [Header("Calibración de la Cuadrícula")]
-    [Tooltip("¿Cuántas unidades de Unity mide 1 celda de su mapa? (Suele ser 1, pero puede variar según el tamaño de sus sprites)")]
     public float tamanoDeCelda = 1f;
 
-    [Tooltip("Rango 3x3: Centro + 1 celda (Usamos 1.5 para dar margen de error)")]
+    [Tooltip("Rango 3x3 frontal: 1.5 unidades hacia adelante")]
     public float limite3x3 = 1.5f;
-    [Tooltip("Rango 5x5: Centro + 2 celdas (Usamos 2.5 para dar margen de error)")]
+    [Tooltip("Rango 5x5 frontal: 2.5 unidades hacia adelante")]
     public float limite5x5 = 2.5f;
 
     public void EjecutarImpulso(Vector2 direccionApuntada)
@@ -42,29 +41,33 @@ public class ImpulsoPower : MonoBehaviour
 
             Vector2 diferencia = rbObjeto.position - (Vector2)transform.position;
 
-            // Calculamos la distancia real en Unity
-            float distanciaReal = Mathf.Max(Mathf.Abs(diferencia.x), Mathf.Abs(diferencia.y));
+           
+            if (Vector2.Dot(diferencia.normalized, direccionApuntada) < 0f)
+            {
+                // Lo ignoramos por completo
+                continue;
+            }
 
-            // La dividimos por el tamaño de su celda para saber exactamente a cuántas "Celdas" está
+            // Calculamos la distancia real y en celdas
+            float distanciaReal = Mathf.Max(Mathf.Abs(diferencia.x), Mathf.Abs(diferencia.y));
             float distanciaCeldas = distanciaReal / tamanoDeCelda;
 
             float multiplicadorCeldas = 0f;
 
             if (distanciaCeldas <= limite3x3)
             {
-                multiplicadorCeldas = 12f; // RQF185: Mueve 6 celdas
+                multiplicadorCeldas = 6f; 
             }
             else if (distanciaCeldas <= limite5x5)
             {
-                multiplicadorCeldas = 6f; // RQF186: Mueve 2 celdas
+                multiplicadorCeldas = 2f; 
             }
             else
             {
-                multiplicadorCeldas = 1f; // RQF187: Mueve 1 celda
+                multiplicadorCeldas = 1f; 
             }
 
-            // CHIVATO PARA LA CONSOLA: Le dirá exactamente qué cálculo hizo con cada objeto
-            Debug.Log($"[Impulso] Objeto: {rbObjeto.name} | Distancia: {distanciaCeldas} celdas | Multiplicador: {multiplicadorCeldas}x");
+            Debug.Log($"[Impulso Frontal] Objeto: {rbObjeto.name} | Distancia: {distanciaCeldas} celdas | Multiplicador: {multiplicadorCeldas}x");
 
             Vector2 fuerzaFinal = direccionApuntada * (multiplicadorCeldas * fuerzaPorCelda);
             rbObjeto.AddForce(fuerzaFinal, ForceMode2D.Impulse);

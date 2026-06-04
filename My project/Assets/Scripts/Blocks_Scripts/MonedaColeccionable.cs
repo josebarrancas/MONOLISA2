@@ -1,9 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MonedaColeccionable : MonoBehaviour
 {
     [Header("Estado")]
     public bool recolectada = false;
+
+    // --- NUEVO: HUELLAS DACTILARES PARA EL RESETEO LOCAL ---
+    [HideInInspector] public Vector2 posicionInicial;
+    public static List<Vector2> monedasCaidasAlVacio = new List<Vector2>();
 
     // Contadores estáticos
     public static int monedasTotalesNivel = 0;
@@ -16,10 +21,14 @@ public class MonedaColeccionable : MonoBehaviour
 
     void Awake()
     {
+        // Guardamos la huella de posición inmutable en cuanto nace la moneda
+        posicionInicial = transform.position;
+
         if (Time.frameCount != ultimoFrameDeReinicio)
         {
             monedasTotalesNivel = 0;
             monedasRecogidasNivel = 0;
+            monedasCaidasAlVacio.Clear(); // Limpiamos el registro de caídas al cambiar de nivel
             ultimoFrameDeReinicio = Time.frameCount;
         }
     }
@@ -41,25 +50,26 @@ public class MonedaColeccionable : MonoBehaviour
         else if (collision.gameObject.CompareTag("Dead"))
         {
             Debug.Log("<color=orange>Moneda tocó el vacío (Collision).</color> Destruyendo para evitar bloqueo.");
+            if (!recolectada) monedasCaidasAlVacio.Add(posicionInicial); // Registramos la huella antes de destruir
             Destroy(gameObject);
         }
     }
 
-    // --- NUEVO: Detección para barreras invisibles (Triggers) ---
+    // --- DETECCIÓN PARA BARRERAS INVISIBLES (TRIGGERS) ---
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // REGLA 3: Cae en una zona de muerte (si la barrera es un Trigger)
         if (collision.CompareTag("Dead"))
         {
             Debug.Log("<color=orange>Moneda tocó el vacío (Trigger).</color> Destruyendo para evitar bloqueo.");
-            Destroy(gameObject); // Esto invocará tu OnDestroy automáticamente
+            if (!recolectada) monedasCaidasAlVacio.Add(posicionInicial); // Registramos la huella antes de destruir
+            Destroy(gameObject);
         }
     }
 
     // --- REGLA DE SINGULARIDAD E INACCESIBILIDAD ---
     private void OnDestroy()
     {
-        // Esta genialidad de código que usted escribió se encargará de sumarla
         if (!recolectada && !seEstaCerrandoEscena && Application.isPlaying)
         {
             monedasRecogidasNivel++;
@@ -67,7 +77,8 @@ public class MonedaColeccionable : MonoBehaviour
         }
     }
 
-    private void TomarMoneda()
+    // CORRECCIÓN CRÍTICA: Ahora es 'public' para que ReseteoLocalPower pueda llamarlo libremente
+    public void TomarMoneda()
     {
         recolectada = true;
         monedasRecogidasNivel++;
